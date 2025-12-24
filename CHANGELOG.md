@@ -5,6 +5,14 @@ All notable changes to InvoForge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2024-12-25
+
+### Added
+- **Smart Port Handling** - Launcher detects if InvoForge is already running and opens browser instead of failing; falls back to alternative ports if main port is busy
+
+### Changed
+- **Codecov Integration** - Updated to codecov-action v5 with token authentication and branch coverage
+
 ## [0.1.2] - 2024-12-25
 
 ### Added
@@ -105,8 +113,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.1.3]: https://github.com/1231varun/invoforge/releases/tag/v0.1.3
 [0.1.2]: https://github.com/1231varun/invoforge/releases/tag/v0.1.2
 [0.1.1]: https://github.com/1231varun/invoforge/releases/tag/v0.1.1
 [0.1.0]: https://github.com/1231varun/invoforge/releases/tag/v0.1.0
-[Unreleased]: https://github.com/1231varun/invoforge/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/1231varun/invoforge/compare/v0.1.3...HEAD
 
