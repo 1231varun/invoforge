@@ -62,7 +62,7 @@ class SQLiteLeaveRepository(LeaveRepository):
 
             return [self._row_to_leave(row) for row in rows]
 
-    def get_for_range(self, start_date: str, end_date: str) -> List[Leave]:
+    def get_for_range(self, start_date: date, end_date: date) -> List[Leave]:
         with self._db.connection() as conn:
             rows = conn.execute(
                 """
@@ -70,7 +70,7 @@ class SQLiteLeaveRepository(LeaveRepository):
                 WHERE leave_date >= ? AND leave_date <= ?
                 ORDER BY leave_date
                 """,
-                (start_date, end_date),
+                (start_date.isoformat(), end_date.isoformat()),
             ).fetchall()
 
             return [self._row_to_leave(row) for row in rows]

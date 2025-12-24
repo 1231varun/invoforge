@@ -29,7 +29,7 @@
     <!-- Lucide Icons (MIT License) -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     
-    <link rel="stylesheet" href="/static/css/styles.css?v=14">
+    <link rel="stylesheet" href="/static/css/styles.css?v=16">
     {% if active_tab == 'leaves' %}
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     {% endif %}
@@ -184,6 +184,17 @@
                         <div class="field">
                             <label for="invoice_date">Invoice Date</label>
                             <input type="date" id="invoice_date" name="invoice_date" required>
+                        </div>
+
+                        <div class="field-row">
+                            <div class="field">
+                                <label for="service_period_start">Period Start</label>
+                                <input type="date" id="service_period_start" name="service_period_start" required>
+                            </div>
+                            <div class="field">
+                                <label for="service_period_end">Period End</label>
+                                <input type="date" id="service_period_end" name="service_period_end" required>
+                            </div>
                         </div>
 
                         <div class="field">
@@ -507,7 +518,7 @@
         </footer>
     </div>
 
-    <script src="/static/js/app.js?v=4"></script>
+    <script src="/static/js/app.js?v=5"></script>
     
     <!-- Initialize Lucide Icons -->
     <script>

@@ -140,3 +140,135 @@ class TestGetServicePeriod:
 
         assert start == date(2025, 4, 1)
         assert end == date(2025, 4, 30)
+
+
+class TestCalculateWeekdaysForRange:
+    """Tests for calculate_weekdays_for_range method (custom date ranges)."""
+
+    def test_full_month_matches_calculate_weekdays(
+        self, working_days_calculator: WorkingDaysCalculator
+    ):
+        """Full month range should match calculate_weekdays result."""
+        start = date(2025, 1, 1)
+        end = date(2025, 1, 31)
+
+        result = working_days_calculator.calculate_weekdays_for_range(start, end)
+
+        assert result == 23  # Same as calculate_weekdays(2025, 1)
+
+    def test_partial_month_start(self, working_days_calculator: WorkingDaysCalculator):
+        """Partial month from mid-month to end."""
+        # Dec 15-31, 2025: 15th is Monday
+        start = date(2025, 12, 15)
+        end = date(2025, 12, 31)
+
+        result = working_days_calculator.calculate_weekdays_for_range(start, end)
+
+        # Dec 15 (Mon) to Dec 31 (Wed) = 13 weekdays
+        assert result == 13
+
+    def test_partial_month_end(self, working_days_calculator: WorkingDaysCalculator):
+        """Partial month from start to mid-month."""
+        # Dec 1-15, 2025: 1st is Monday
+        start = date(2025, 12, 1)
+        end = date(2025, 12, 15)
+
+        result = working_days_calculator.calculate_weekdays_for_range(start, end)
+
+        # Dec 1 (Mon) to Dec 15 (Mon) = 11 weekdays
+        assert result == 11
+
+    def test_single_weekday(self, working_days_calculator: WorkingDaysCalculator):
+        """Single weekday should return 1."""
+        start = date(2025, 1, 6)  # Monday
+        end = date(2025, 1, 6)
+
+        result = working_days_calculator.calculate_weekdays_for_range(start, end)
+
+        assert result == 1
+
+    def test_single_weekend_day(self, working_days_calculator: WorkingDaysCalculator):
+        """Single weekend day should return 0."""
+        start = date(2025, 1, 4)  # Saturday
+        end = date(2025, 1, 4)
+
+        result = working_days_calculator.calculate_weekdays_for_range(start, end)
+
+        assert result == 0
+
+    def test_cross_month_range(self, working_days_calculator: WorkingDaysCalculator):
+        """Range spanning two months."""
+        # Dec 20, 2025 to Jan 10, 2026
+        start = date(2025, 12, 20)
+        end = date(2026, 1, 10)
+
+        result = working_days_calculator.calculate_weekdays_for_range(start, end)
+
+        # Dec 20 (Sat) - Dec 31 (Wed): 8 weekdays
+        # Jan 1 (Thu) - Jan 10 (Sat): 7 weekdays
+        # Total: 15 weekdays
+        assert result == 15
+
+
+class TestCalculateForRange:
+    """Tests for calculate_for_range method with custom date ranges and leaves."""
+
+    def test_full_month_no_leaves(self, working_days_calculator: WorkingDaysCalculator):
+        """Full month with no leaves."""
+        start = date(2025, 1, 1)
+        end = date(2025, 1, 31)
+
+        result = working_days_calculator.calculate_for_range(start, end, [])
+
+        assert result.total_weekdays == 23
+        assert result.leaves == 0
+        assert result.working_days == 23
+
+    def test_partial_month_with_leaves(self, working_days_calculator: WorkingDaysCalculator):
+        """Partial month with leaves within range."""
+        start = date(2025, 1, 15)  # Wednesday
+        end = date(2025, 1, 31)
+
+        leaves = [
+            Leave(id=1, leave_date=date(2025, 1, 20), reason="Holiday"),  # Monday
+            Leave(id=2, leave_date=date(2025, 1, 21), reason="Holiday"),  # Tuesday
+        ]
+
+        result = working_days_calculator.calculate_for_range(start, end, leaves)
+
+        # Jan 15-31 has 13 weekdays, minus 2 leaves = 11
+        assert result.total_weekdays == 13
+        assert result.leaves == 2
+        assert result.working_days == 11
+
+    def test_leaves_outside_range_not_counted(self, working_days_calculator: WorkingDaysCalculator):
+        """Leaves outside the date range are not counted."""
+        start = date(2025, 1, 15)
+        end = date(2025, 1, 31)
+
+        leaves = [
+            Leave(id=1, leave_date=date(2025, 1, 6), reason="Before range"),  # Before
+            Leave(id=2, leave_date=date(2025, 1, 20), reason="In range"),  # In range
+            Leave(id=3, leave_date=date(2025, 2, 5), reason="After range"),  # After
+        ]
+
+        result = working_days_calculator.calculate_for_range(start, end, leaves)
+
+        assert result.leaves == 1  # Only the one in range
+
+    def test_weekend_leaves_in_range_not_counted(
+        self, working_days_calculator: WorkingDaysCalculator
+    ):
+        """Weekend leaves within range don't count."""
+        start = date(2025, 1, 1)
+        end = date(2025, 1, 31)
+
+        leaves = [
+            Leave(id=1, leave_date=date(2025, 1, 4), reason="Saturday"),
+            Leave(id=2, leave_date=date(2025, 1, 5), reason="Sunday"),
+        ]
+
+        result = working_days_calculator.calculate_for_range(start, end, leaves)
+
+        assert result.leaves == 0
+        assert result.working_days == 23

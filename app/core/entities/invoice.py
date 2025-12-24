@@ -16,6 +16,8 @@ class InvoiceInput:
     leaves_taken: int
     leave_dates: List[date]
     rate: float
+    service_period_start: Optional[date] = None
+    service_period_end: Optional[date] = None
 
 
 @dataclass(frozen=True)

@@ -34,8 +34,14 @@ class InvoiceCalculator:
 
         Performs all calculations and returns an immutable Invoice.
         """
-        # Calculate service period
-        period_start, period_end = self._working_days.get_service_period(input_data.invoice_date)
+        # Use custom service period if provided, otherwise calculate from invoice date
+        if input_data.service_period_start and input_data.service_period_end:
+            period_start = input_data.service_period_start
+            period_end = input_data.service_period_end
+        else:
+            period_start, period_end = self._working_days.get_service_period(
+                input_data.invoice_date
+            )
 
         # Calculate days worked
         days_worked = input_data.total_working_days - input_data.leaves_taken

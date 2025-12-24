@@ -36,7 +36,7 @@ class LeaveRepository(ABC):
         pass
 
     @abstractmethod
-    def get_for_range(self, start_date: str, end_date: str) -> List[Leave]:
+    def get_for_range(self, start_date: date, end_date: date) -> List[Leave]:
         """Get all leaves within a date range"""
         pass
 

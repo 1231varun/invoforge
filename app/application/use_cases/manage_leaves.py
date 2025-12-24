@@ -74,8 +74,11 @@ class ManageLeavesUseCase:
     def get_leaves_for_calendar(self, start: str, end: str) -> LeavesListResponse:
         """Get leaves for calendar view (FullCalendar)"""
         try:
-            start_date = start.split("T")[0] if "T" in start else start
-            end_date = end.split("T")[0] if "T" in end else end
+            start_str = start.split("T")[0] if "T" in start else start
+            end_str = end.split("T")[0] if "T" in end else end
+            # Convert strings to date objects
+            start_date = date.fromisoformat(start_str)
+            end_date = date.fromisoformat(end_str)
             leaves = self._leaves.get_for_range(start_date, end_date)
             return LeavesListResponse(success=True, leaves=leaves, count=len(leaves))
         except Exception as e:

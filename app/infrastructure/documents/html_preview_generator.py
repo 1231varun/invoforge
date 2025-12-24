@@ -30,10 +30,18 @@ class HTMLPreviewGenerator:
         if isinstance(invoice_date, str):
             invoice_date = date.fromisoformat(invoice_date)
 
-        # Calculate service period
-        first_day = date(invoice_date.year, invoice_date.month, 1)
-        last_day_num = monthrange(invoice_date.year, invoice_date.month)[1]
-        last_day = date(invoice_date.year, invoice_date.month, last_day_num)
+        # Use custom service period if provided, otherwise calculate from invoice date
+        if data.get("service_period_start") and data.get("service_period_end"):
+            first_day = data["service_period_start"]
+            last_day = data["service_period_end"]
+            if isinstance(first_day, str):
+                first_day = date.fromisoformat(first_day)
+            if isinstance(last_day, str):
+                last_day = date.fromisoformat(last_day)
+        else:
+            first_day = date(invoice_date.year, invoice_date.month, 1)
+            last_day_num = monthrange(invoice_date.year, invoice_date.month)[1]
+            last_day = date(invoice_date.year, invoice_date.month, last_day_num)
 
         # Calculate values
         rate = float(data.get("rate", settings.daily_rate) or 0)

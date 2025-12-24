@@ -24,6 +24,8 @@ class GenerateInvoiceRequest:
     leave_dates: List[date]
     rate: Optional[float] = None
     output_format: str = "pdf"  # "pdf", "docx", or "both"
+    service_period_start: Optional[date] = None
+    service_period_end: Optional[date] = None
 
 
 @dataclass
@@ -82,6 +84,8 @@ class GenerateInvoiceUseCase:
                 leaves_taken=request.leaves_taken,
                 leave_dates=request.leave_dates,
                 rate=rate,
+                service_period_start=request.service_period_start,
+                service_period_end=request.service_period_end,
             )
 
             # Calculate invoice

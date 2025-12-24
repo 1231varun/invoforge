@@ -5,6 +5,24 @@ All notable changes to InvoForge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2024-12-25
+
+### Added
+- **Editable Service Period** - Users can now customize service period start/end dates for partial month billing (e.g., starting mid-month)
+- **Date Range Working Days API** - New `/api/working-days` endpoint supports `start_date` and `end_date` parameters
+- **Centralized Version Management** - App version now defined in single source (`app/version.py`), automatically injected into service worker and templates
+- **New Unit Tests** - Added 10 new tests for date range calculations covering partial months, cross-month ranges, and edge cases
+
+### Fixed
+- **Calendar Leaves Not Displaying** - Fixed `get_for_range` to accept date objects instead of strings, resolving calendar leave display issue
+- **Timezone Bug in Service Period** - Fixed JavaScript `toISOString()` UTC conversion causing dates to shift by one day in IST timezone
+- **Responsive Layout** - Fixed service period fields overflowing on smaller screens with proper CSS grid handling
+- **PyInstaller Build** - Fixed macOS/Linux/Windows builds with proper icon handling and platform-specific configurations
+
+### Changed
+- Renamed "Service Period Start/End" labels to "Period Start/End" for better UI fit
+- Improved form layout responsiveness with `min-width: 0` grid fix
+
 ## [0.1.1] - 2024-12-25
 
 ### Fixed
@@ -87,6 +105,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.1.2]: https://github.com/1231varun/invoforge/releases/tag/v0.1.2
+[0.1.1]: https://github.com/1231varun/invoforge/releases/tag/v0.1.1
 [0.1.0]: https://github.com/1231varun/invoforge/releases/tag/v0.1.0
-[Unreleased]: https://github.com/1231varun/invoforge/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/1231varun/invoforge/compare/v0.1.2...HEAD
 

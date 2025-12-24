@@ -1,7 +1,7 @@
 """InvoForge Version Information"""
 
-__version__ = "0.1.1"
-__version_info__ = (0, 1, 1)
+__version__ = "0.1.2"
+__version_info__ = (0, 1, 2)
 
 # The year the app was first released - copyright year will never be less than this
 # This protects against incorrect system clocks showing past dates

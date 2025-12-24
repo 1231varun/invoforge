@@ -20,6 +20,8 @@ class PreviewInvoiceRequest:
     leaves_taken: int
     leave_dates: List[date]
     rate: Optional[float] = None
+    service_period_start: Optional[date] = None
+    service_period_end: Optional[date] = None
 
 
 @dataclass
@@ -60,6 +62,8 @@ class PreviewInvoiceUseCase:
                 leaves_taken=request.leaves_taken,
                 leave_dates=request.leave_dates,
                 rate=rate,
+                service_period_start=request.service_period_start,
+                service_period_end=request.service_period_end,
             )
 
             invoice = self._calculator.create_invoice(input_data, settings.currency)

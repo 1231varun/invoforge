@@ -5,7 +5,7 @@ class InvoiceApp {
         this.activeTab = this.appEl?.dataset.activeTab || 'dashboard';
         this.defaultRate = parseFloat(this.appEl?.dataset.defaultRate) || 0;
         this.currency = this.appEl?.dataset.currency || 'EUR';
-        this.currentVersion = this.appEl?.dataset.version || '0.1.1';
+        this.currentVersion = this.appEl?.dataset.version || '0.1.2';
         
         this.init();
     }
@@ -145,6 +145,8 @@ class InvoiceApp {
         this.form = document.getElementById('invoice-form');
         this.invoiceNumberInput = document.getElementById('invoice_number');
         this.invoiceDateInput = document.getElementById('invoice_date');
+        this.servicePeriodStartInput = document.getElementById('service_period_start');
+        this.servicePeriodEndInput = document.getElementById('service_period_end');
         this.workingDaysInput = document.getElementById('total_working_days');
         this.workingDaysHint = document.getElementById('working-days-hint');
         this.leavesInput = document.getElementById('leaves_taken');
@@ -165,17 +167,39 @@ class InvoiceApp {
         this.debounceTimer = null;
         this.currentLeaveDates = [];
         
-        // Set today's date
+        // Set today's date and default service period
         const today = new Date().toISOString().split('T')[0];
         this.invoiceDateInput.value = today;
+        this.setDefaultServicePeriod(today);
         
         // Fetch next invoice number and working days
         await this.fetchNextInvoiceNumber();
-        await this.fetchWorkingDaysForDate(today);
+        await this.fetchWorkingDaysForServicePeriod();
         
         this.bindInvoiceEvents();
         this.bindPreviewModal();
         this.updatePreview();
+    }
+    
+    setDefaultServicePeriod(dateStr) {
+        // Set service period to first and last day of the month
+        const date = new Date(dateStr + 'T00:00:00'); // Parse as local time
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        
+        // Format as YYYY-MM-DD without timezone conversion
+        const formatDate = (d) => {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        };
+        
+        this.servicePeriodStartInput.value = formatDate(firstDay);
+        this.servicePeriodEndInput.value = formatDate(lastDay);
     }
     
     bindPreviewModal() {
@@ -279,13 +303,14 @@ class InvoiceApp {
         }
     }
     
-    async fetchWorkingDaysForDate(dateStr) {
-        if (!dateStr) return;
+    async fetchWorkingDaysForServicePeriod() {
+        const startDate = this.servicePeriodStartInput?.value;
+        const endDate = this.servicePeriodEndInput?.value;
         
-        const [year, month] = dateStr.split('-');
+        if (!startDate || !endDate) return;
         
         try {
-            const response = await fetch(`/api/working-days?year=${year}&month=${month}`);
+            const response = await fetch(`/api/working-days?start_date=${startDate}&end_date=${endDate}`);
             const data = await response.json();
             
             if (data.success) {
@@ -336,9 +361,20 @@ class InvoiceApp {
     }
     
     bindInvoiceEvents() {
-        // Date change triggers working days recalculation
+        // Invoice date change sets default service period
         this.invoiceDateInput.addEventListener('change', () => {
-            this.fetchWorkingDaysForDate(this.invoiceDateInput.value);
+            this.setDefaultServicePeriod(this.invoiceDateInput.value);
+            this.fetchWorkingDaysForServicePeriod();
+            this.debouncedPreview();
+        });
+        
+        // Service period change triggers working days recalculation
+        this.servicePeriodStartInput?.addEventListener('change', () => {
+            this.fetchWorkingDaysForServicePeriod();
+            this.debouncedPreview();
+        });
+        this.servicePeriodEndInput?.addEventListener('change', () => {
+            this.fetchWorkingDaysForServicePeriod();
             this.debouncedPreview();
         });
         
@@ -401,6 +437,8 @@ class InvoiceApp {
         return {
             invoice_number: this.invoiceNumberInput.value,
             invoice_date: this.invoiceDateInput.value,
+            service_period_start: this.servicePeriodStartInput?.value,
+            service_period_end: this.servicePeriodEndInput?.value,
             validity_year: document.getElementById('validity_year').value,
             total_working_days: this.workingDaysInput.value,
             leaves_taken: this.leavesInput.value || '0',

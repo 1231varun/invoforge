@@ -116,14 +116,24 @@ def delete_leave_by_date(leave_date: str):
 
 @leaves_bp.route("/working-days")
 def working_days():
-    """Get working days for a month"""
+    """Get working days for a date range or month"""
     container = get_container()
 
+    # Support both date range and year/month for backwards compatibility
+    start_date_str = request.args.get("start_date")
+    end_date_str = request.args.get("end_date")
     year = request.args.get("year", type=int)
     month = request.args.get("month", type=int)
 
     try:
-        response = container.working_days_use_case.execute(year, month)
+        if start_date_str and end_date_str:
+            # Use date range
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+            response = container.working_days_use_case.execute_for_range(start_date, end_date)
+        else:
+            # Use year/month (backwards compatible)
+            response = container.working_days_use_case.execute(year, month)
 
         if response.success:
             return jsonify(

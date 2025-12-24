@@ -61,3 +61,39 @@ class WorkingDaysCalculator:
         last_day_num = monthrange(reference_date.year, reference_date.month)[1]
         last_day = date(reference_date.year, reference_date.month, last_day_num)
         return first_day, last_day
+
+    def calculate_weekdays_for_range(self, start_date: date, end_date: date) -> int:
+        """Calculate total weekdays (Mon-Fri) in a date range"""
+        from datetime import timedelta
+
+        weekdays = 0
+        current = start_date
+
+        while current <= end_date:
+            if current.weekday() < 5:  # Monday = 0, Friday = 4
+                weekdays += 1
+            current = current + timedelta(days=1)
+
+        return weekdays
+
+    def calculate_for_range(
+        self, start_date: date, end_date: date, leaves: List[Leave]
+    ) -> WorkingDaysResult:
+        """
+        Calculate working days for a custom date range minus leaves.
+
+        Only counts leaves that fall on weekdays within the range.
+        """
+        total_weekdays = self.calculate_weekdays_for_range(start_date, end_date)
+
+        # Only count leaves that fall on weekdays and within the date range
+        weekday_leaves = [
+            l for l in leaves if l.is_weekday and start_date <= l.leave_date <= end_date
+        ]
+
+        return WorkingDaysResult(
+            total_weekdays=total_weekdays,
+            leaves=len(weekday_leaves),
+            working_days=total_weekdays - len(weekday_leaves),
+            leave_dates=[l.leave_date.isoformat() for l in leaves],
+        )

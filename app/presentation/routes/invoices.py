@@ -25,6 +25,16 @@ def generate():
         invoice_date = datetime.strptime(data["invoice_date"], "%Y-%m-%d").date()
         leave_dates = [datetime.strptime(d, "%Y-%m-%d").date() for d in data.get("leave_dates", [])]
 
+        # Parse optional service period
+        service_period_start = None
+        service_period_end = None
+        if data.get("service_period_start"):
+            service_period_start = datetime.strptime(
+                data["service_period_start"], "%Y-%m-%d"
+            ).date()
+        if data.get("service_period_end"):
+            service_period_end = datetime.strptime(data["service_period_end"], "%Y-%m-%d").date()
+
         req = GenerateInvoiceRequest(
             invoice_number=int(data["invoice_number"]),
             invoice_date=invoice_date,
@@ -34,6 +44,8 @@ def generate():
             leave_dates=leave_dates,
             rate=float(data["rate"]) if data.get("rate") else None,
             output_format=data.get("output_format", "pdf"),
+            service_period_start=service_period_start,
+            service_period_end=service_period_end,
         )
 
         response = container.generate_invoice_use_case.execute(req)
@@ -74,6 +86,16 @@ def preview():
         invoice_date = datetime.strptime(data["invoice_date"], "%Y-%m-%d").date()
         leave_dates = [datetime.strptime(d, "%Y-%m-%d").date() for d in data.get("leave_dates", [])]
 
+        # Parse optional service period
+        service_period_start = None
+        service_period_end = None
+        if data.get("service_period_start"):
+            service_period_start = datetime.strptime(
+                data["service_period_start"], "%Y-%m-%d"
+            ).date()
+        if data.get("service_period_end"):
+            service_period_end = datetime.strptime(data["service_period_end"], "%Y-%m-%d").date()
+
         req = PreviewInvoiceRequest(
             invoice_number=int(data["invoice_number"]),
             invoice_date=invoice_date,
@@ -82,6 +104,8 @@ def preview():
             leaves_taken=int(data.get("leaves_taken", 0)),
             leave_dates=leave_dates,
             rate=float(data["rate"]) if data.get("rate") else None,
+            service_period_start=service_period_start,
+            service_period_end=service_period_end,
         )
 
         response = container.preview_invoice_use_case.execute(req)
