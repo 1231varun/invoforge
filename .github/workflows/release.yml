@@ -54,6 +54,7 @@ jobs:
             --add-data "app/templates:app/templates" \
             --add-data "static:static" \
             --name InvoForge \
+            --icon static/icons/icon.icns \
             launcher.py
 
       - name: Build executable (Windows)
@@ -79,7 +80,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           mkdir -p release
-          cp dist/InvoForge release/
+          cp -r dist/InvoForge.app release/
           cp README.md release/
           cd release && zip -r ../${{ matrix.asset_name }} .
 
