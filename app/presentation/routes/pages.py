@@ -3,7 +3,7 @@
 from datetime import datetime
 from pathlib import Path
 
-from flask import Blueprint, redirect, render_template, send_from_directory, url_for
+from flask import Blueprint, redirect, render_template, url_for
 
 from app.container import get_container
 from app.version import COPYRIGHT_START_YEAR, __version__
