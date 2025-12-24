@@ -8,12 +8,32 @@ from datetime import date
 
 import pytest
 
+from app import create_app
 from app.core.entities.invoice import InvoiceInput
 from app.core.entities.leave import Leave
 from app.core.entities.settings import Settings
 from app.core.services.amount_formatter import AmountFormatter
 from app.core.services.invoice_calculator import InvoiceCalculator
 from app.core.services.working_days_calculator import WorkingDaysCalculator
+
+# ============================================
+# Flask App Fixtures
+# ============================================
+
+
+@pytest.fixture
+def app():
+    """Create Flask app for testing."""
+    app = create_app()
+    app.config["TESTING"] = True
+    return app
+
+
+@pytest.fixture
+def app_client(app):
+    """Flask test client for making requests."""
+    return app.test_client()
+
 
 # ============================================
 # Core Service Fixtures
