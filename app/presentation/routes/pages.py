@@ -1,4 +1,5 @@
 """Page routes - HTML views"""
+
 from datetime import datetime
 from pathlib import Path
 
@@ -20,11 +21,8 @@ def get_copyright_year():
 
 def get_template_context(**kwargs):
     """Get common template context with version and year"""
-    return {
-        "version": __version__,
-        "year": get_copyright_year(),
-        **kwargs
-    }
+    return {"version": __version__, "year": get_copyright_year(), **kwargs}
+
 
 # Static directory for PWA assets
 STATIC_DIR = Path(__file__).parent.parent.parent.parent / "static"
@@ -44,7 +42,9 @@ def index():
         return redirect(url_for("pages.setup"))
 
     settings = container.settings_use_case.get_settings().settings
-    return render_template("index.html", **get_template_context(defaults=settings, active_tab="dashboard"))
+    return render_template(
+        "index.html", **get_template_context(defaults=settings, active_tab="dashboard")
+    )
 
 
 @pages_bp.route("/invoice")
@@ -55,7 +55,9 @@ def invoice():
         return redirect(url_for("pages.setup"))
 
     settings = container.settings_use_case.get_settings().settings
-    return render_template("index.html", **get_template_context(defaults=settings, active_tab="invoice"))
+    return render_template(
+        "index.html", **get_template_context(defaults=settings, active_tab="invoice")
+    )
 
 
 @pages_bp.route("/leaves")
@@ -66,7 +68,9 @@ def leaves():
         return redirect(url_for("pages.setup"))
 
     settings = container.settings_use_case.get_settings().settings
-    return render_template("index.html", **get_template_context(defaults=settings, active_tab="leaves"))
+    return render_template(
+        "index.html", **get_template_context(defaults=settings, active_tab="leaves")
+    )
 
 
 @pages_bp.route("/history")
@@ -77,7 +81,9 @@ def history():
         return redirect(url_for("pages.setup"))
 
     settings = container.settings_use_case.get_settings().settings
-    return render_template("index.html", **get_template_context(defaults=settings, active_tab="history"))
+    return render_template(
+        "index.html", **get_template_context(defaults=settings, active_tab="history")
+    )
 
 
 @pages_bp.route("/settings")
@@ -88,7 +94,9 @@ def settings():
         return redirect(url_for("pages.setup"))
 
     settings_data = container.settings_use_case.get_settings().settings
-    return render_template("index.html", **get_template_context(defaults=settings_data, active_tab="settings"))
+    return render_template(
+        "index.html", **get_template_context(defaults=settings_data, active_tab="settings")
+    )
 
 
 @pages_bp.route("/setup")
@@ -100,4 +108,3 @@ def setup():
 
     settings = container.settings_use_case.get_settings().settings
     return render_template("setup.html", **get_template_context(defaults=settings))
-

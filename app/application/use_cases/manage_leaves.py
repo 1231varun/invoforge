@@ -1,4 +1,5 @@
 """Manage Leaves Use Case"""
+
 from dataclasses import dataclass
 from datetime import date
 from typing import List, Optional
@@ -31,7 +32,7 @@ class LeavesListResponse:
 class ManageLeavesUseCase:
     """
     Use case for managing leaves.
-    
+
     Provides operations for adding, removing, and querying leaves.
     """
 
@@ -87,4 +88,3 @@ class ManageLeavesUseCase:
             return LeavesListResponse(success=True, leaves=leaves, count=len(leaves))
         except Exception as e:
             return LeavesListResponse(success=False, error=str(e))
-

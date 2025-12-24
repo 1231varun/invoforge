@@ -1,4 +1,5 @@
 """SQLite Invoice Repository Implementation"""
+
 from datetime import date, datetime
 from typing import List, Optional
 
@@ -22,7 +23,7 @@ class SQLiteInvoiceRepository(InvoiceRepository):
         days_worked: int,
         amount: float,
         docx_path: str,
-        pdf_path: Optional[str] = None
+        pdf_path: Optional[str] = None,
     ) -> InvoiceRecord:
         with self._db.connection() as conn:
             cursor = conn.execute(
@@ -40,8 +41,8 @@ class SQLiteInvoiceRepository(InvoiceRepository):
                     days_worked,
                     amount,
                     docx_path,
-                    pdf_path
-                )
+                    pdf_path,
+                ),
             )
             return InvoiceRecord(
                 id=cursor.lastrowid,
@@ -53,7 +54,7 @@ class SQLiteInvoiceRepository(InvoiceRepository):
                 amount=amount,
                 docx_path=docx_path,
                 pdf_path=pdf_path,
-                created_at=datetime.now().isoformat()
+                created_at=datetime.now().isoformat(),
             )
 
     def get_all(self) -> List[InvoiceRecord]:
@@ -77,17 +78,14 @@ class SQLiteInvoiceRepository(InvoiceRepository):
                        service_period_end, days_worked, amount, docx_path, pdf_path, created_at
                 FROM invoices WHERE id = ?
                 """,
-                (invoice_id,)
+                (invoice_id,),
             ).fetchone()
 
             return self._row_to_record(row) if row else None
 
     def delete(self, invoice_id: int) -> bool:
         with self._db.connection() as conn:
-            cursor = conn.execute(
-                "DELETE FROM invoices WHERE id = ?",
-                (invoice_id,)
-            )
+            cursor = conn.execute("DELETE FROM invoices WHERE id = ?", (invoice_id,))
             return cursor.rowcount > 0
 
     def get_next_number(self) -> int:
@@ -95,9 +93,7 @@ class SQLiteInvoiceRepository(InvoiceRepository):
 
     def get_last_number(self) -> int:
         with self._db.connection() as conn:
-            row = conn.execute(
-                "SELECT MAX(invoice_number) as max_num FROM invoices"
-            ).fetchone()
+            row = conn.execute("SELECT MAX(invoice_number) as max_num FROM invoices").fetchone()
             return row["max_num"] if row and row["max_num"] else 0
 
     def _row_to_record(self, row) -> InvoiceRecord:
@@ -111,6 +107,5 @@ class SQLiteInvoiceRepository(InvoiceRepository):
             amount=row["amount"],
             docx_path=row["docx_path"],
             pdf_path=row["pdf_path"],
-            created_at=row["created_at"]
+            created_at=row["created_at"],
         )
-

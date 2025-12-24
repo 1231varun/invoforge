@@ -1,4 +1,5 @@
 """Document generator interface (port)"""
+
 from abc import ABC, abstractmethod
 from pathlib import Path
 
@@ -13,4 +14,3 @@ class DocumentGenerator(ABC):
     def generate(self, invoice: Invoice, settings: Settings) -> Path:
         """Generate a document from an invoice and return the file path"""
         pass
-

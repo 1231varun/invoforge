@@ -4,6 +4,7 @@ Dependency Injection Container
 Wires together all dependencies following the Dependency Inversion Principle.
 Inner layers (core, application) depend on abstractions, outer layers provide implementations.
 """
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -33,9 +34,10 @@ from app.infrastructure.persistence.sqlite_settings_repository import SQLiteSett
 class Container:
     """
     Application dependency container.
-    
+
     Holds all wired dependencies and use cases.
     """
+
     # Infrastructure
     database: Database
     invoice_repository: SQLiteInvoiceRepository
@@ -65,7 +67,7 @@ _container: Optional[Container] = None
 def create_container() -> Container:
     """
     Create and wire all dependencies.
-    
+
     This is the composition root where all dependencies are assembled.
     """
     # Infrastructure layer
@@ -81,9 +83,7 @@ def create_container() -> Container:
 
     # Core services
     working_days_calculator = WorkingDaysCalculator()
-    invoice_calculator = InvoiceCalculator(
-        working_days_calculator=working_days_calculator
-    )
+    invoice_calculator = InvoiceCalculator(working_days_calculator=working_days_calculator)
 
     # Use cases
     generate_invoice_use_case = GenerateInvoiceUseCase(
@@ -91,32 +91,26 @@ def create_container() -> Container:
         settings_repository=settings_repository,
         document_generator=document_generator,
         pdf_converter=pdf_converter,
-        invoice_calculator=invoice_calculator
+        invoice_calculator=invoice_calculator,
     )
 
     preview_invoice_use_case = PreviewInvoiceUseCase(
-        settings_repository=settings_repository,
-        invoice_calculator=invoice_calculator
+        settings_repository=settings_repository, invoice_calculator=invoice_calculator
     )
 
-    leaves_use_case = ManageLeavesUseCase(
-        leave_repository=leave_repository
-    )
+    leaves_use_case = ManageLeavesUseCase(leave_repository=leave_repository)
 
-    settings_use_case = ManageSettingsUseCase(
-        settings_repository=settings_repository
-    )
+    settings_use_case = ManageSettingsUseCase(settings_repository=settings_repository)
 
     dashboard_use_case = GetDashboardUseCase(
         invoice_repository=invoice_repository,
         leave_repository=leave_repository,
         settings_repository=settings_repository,
-        working_days_calculator=working_days_calculator
+        working_days_calculator=working_days_calculator,
     )
 
     working_days_use_case = GetWorkingDaysUseCase(
-        leave_repository=leave_repository,
-        working_days_calculator=working_days_calculator
+        leave_repository=leave_repository, working_days_calculator=working_days_calculator
     )
 
     return Container(
@@ -134,7 +128,7 @@ def create_container() -> Container:
         leaves_use_case=leaves_use_case,
         settings_use_case=settings_use_case,
         dashboard_use_case=dashboard_use_case,
-        working_days_use_case=working_days_use_case
+        working_days_use_case=working_days_use_case,
     )
 
 
@@ -150,4 +144,3 @@ def reset_container():
     """Reset the container (useful for testing)"""
     global _container
     _container = None
-

@@ -1,4 +1,5 @@
 """Generate Invoice Use Case"""
+
 from dataclasses import dataclass
 from datetime import date
 from typing import List, Optional
@@ -14,6 +15,7 @@ from app.core.services.invoice_calculator import InvoiceCalculator
 @dataclass
 class GenerateInvoiceRequest:
     """Input data for generating an invoice"""
+
     invoice_number: int
     invoice_date: date
     validity_year: str
@@ -27,6 +29,7 @@ class GenerateInvoiceRequest:
 @dataclass
 class GenerateInvoiceResponse:
     """Result of invoice generation"""
+
     success: bool
     invoice: Optional[Invoice] = None
     docx_filename: Optional[str] = None
@@ -38,7 +41,7 @@ class GenerateInvoiceResponse:
 class GenerateInvoiceUseCase:
     """
     Use case for generating invoices.
-    
+
     Orchestrates:
     1. Getting settings
     2. Calculating invoice values
@@ -53,7 +56,7 @@ class GenerateInvoiceUseCase:
         settings_repository: SettingsRepository,
         document_generator: DocumentGenerator,
         pdf_converter: PDFConverter,
-        invoice_calculator: InvoiceCalculator = None
+        invoice_calculator: InvoiceCalculator = None,
     ):
         self._invoices = invoice_repository
         self._settings = settings_repository
@@ -78,7 +81,7 @@ class GenerateInvoiceUseCase:
                 total_working_days=request.total_working_days,
                 leaves_taken=request.leaves_taken,
                 leave_dates=request.leave_dates,
-                rate=rate
+                rate=rate,
             )
 
             # Calculate invoice
@@ -129,7 +132,7 @@ class GenerateInvoiceUseCase:
                 days_worked=invoice.days_worked,
                 amount=invoice.amount,
                 docx_path=docx_path_str or "",
-                pdf_path=pdf_path_str
+                pdf_path=pdf_path_str,
             )
 
             return GenerateInvoiceResponse(
@@ -137,12 +140,8 @@ class GenerateInvoiceUseCase:
                 invoice=invoice,
                 docx_filename=docx_path.name if docx_path else None,
                 pdf_filename=pdf_path.name if pdf_path else None,
-                pdf_error=pdf_error
+                pdf_error=pdf_error,
             )
 
         except Exception as e:
-            return GenerateInvoiceResponse(
-                success=False,
-                error=str(e)
-            )
-
+            return GenerateInvoiceResponse(success=False, error=str(e))

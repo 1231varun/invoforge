@@ -239,4 +239,3 @@ class TestSettingsEntity:
         settings = Settings.from_dict(data)
 
         assert settings.setup_complete is False
-

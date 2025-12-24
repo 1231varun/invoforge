@@ -1,4 +1,5 @@
 """Get Working Days Use Case"""
+
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
@@ -25,12 +26,14 @@ class GetWorkingDaysUseCase:
     def __init__(
         self,
         leave_repository: LeaveRepository,
-        working_days_calculator: WorkingDaysCalculator = None
+        working_days_calculator: WorkingDaysCalculator = None,
     ):
         self._leaves = leave_repository
         self._calculator = working_days_calculator or WorkingDaysCalculator()
 
-    def execute(self, year: Optional[int] = None, month: Optional[int] = None) -> WorkingDaysResponse:
+    def execute(
+        self, year: Optional[int] = None, month: Optional[int] = None
+    ) -> WorkingDaysResponse:
         """Execute the use case"""
         try:
             # Default to current month
@@ -50,9 +53,8 @@ class GetWorkingDaysUseCase:
                 total_weekdays=result.total_weekdays,
                 leaves=result.leaves,
                 working_days=result.working_days,
-                leave_dates=result.leave_dates
+                leave_dates=result.leave_dates,
             )
 
         except Exception as e:
             return WorkingDaysResponse(success=False, error=str(e))
-

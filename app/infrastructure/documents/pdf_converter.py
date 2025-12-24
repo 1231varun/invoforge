@@ -9,6 +9,7 @@ Supported platforms:
 - Windows: MS Word (via docx2pdf) → LibreOffice
 - Linux: LibreOffice → unoconv → wkhtmltopdf
 """
+
 import platform
 import shutil
 import subprocess
@@ -52,6 +53,7 @@ class DocxToPdfStrategy(ConversionStrategy):
     def is_available(self) -> bool:
         try:
             from docx2pdf import convert  # noqa: F401
+
             return True
         except ImportError:
             return False
@@ -59,6 +61,7 @@ class DocxToPdfStrategy(ConversionStrategy):
     def convert(self, source_path: Path, output_path: Path) -> bool:
         try:
             from docx2pdf import convert
+
             convert(str(source_path), str(output_path))
             return output_path.exists()
         except Exception:
@@ -124,13 +127,15 @@ class LibreOfficeStrategy(ConversionStrategy):
                 [
                     self._executable,
                     "--headless",
-                    "--convert-to", "pdf",
-                    "--outdir", str(source_path.parent),
-                    str(source_path)
+                    "--convert-to",
+                    "pdf",
+                    "--outdir",
+                    str(source_path.parent),
+                    str(source_path),
                 ],
                 capture_output=True,
                 timeout=120,
-                check=False
+                check=False,
             )
             return result.returncode == 0 and output_path.exists()
         except (subprocess.TimeoutExpired, OSError):
@@ -153,7 +158,7 @@ class UnoconvStrategy(ConversionStrategy):
                 ["unoconv", "-f", "pdf", "-o", str(output_path), str(source_path)],
                 capture_output=True,
                 timeout=120,
-                check=False
+                check=False,
             )
             return result.returncode == 0 and output_path.exists()
         except (subprocess.TimeoutExpired, OSError):
@@ -162,16 +167,16 @@ class UnoconvStrategy(ConversionStrategy):
 
 class CrossPlatformPDFConverter(PDFConverter):
     """
-    Cross-platform PDF converter that automatically selects 
+    Cross-platform PDF converter that automatically selects
     the best available conversion strategy.
-    
+
     Follows the Strategy pattern for extensibility.
     """
 
     def __init__(self, strategies: Optional[List[ConversionStrategy]] = None):
         """
         Initialize with custom strategies or use defaults.
-        
+
         Args:
             strategies: Optional list of conversion strategies to try in order.
                        If None, uses platform-appropriate defaults.
@@ -203,18 +208,16 @@ class CrossPlatformPDFConverter(PDFConverter):
     def get_available_strategies(self) -> List[ConversionStrategy]:
         """Get list of available conversion strategies"""
         if self._available_strategies is None:
-            self._available_strategies = [
-                s for s in self._strategies if s.is_available()
-            ]
+            self._available_strategies = [s for s in self._strategies if s.is_available()]
         return self._available_strategies
 
     def convert(self, source_path: Path) -> Optional[Path]:
         """
         Convert DOCX to PDF using the first available strategy.
-        
+
         Args:
             source_path: Path to the DOCX file
-            
+
         Returns:
             Path to the generated PDF, or None if conversion failed
         """
@@ -248,4 +251,3 @@ class CrossPlatformPDFConverter(PDFConverter):
             "available_converters": [s.name for s in self.get_available_strategies()],
             "all_converters": [s.name for s in self._strategies],
         }
-

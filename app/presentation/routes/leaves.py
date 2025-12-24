@@ -1,4 +1,5 @@
 """Leave API routes"""
+
 from datetime import datetime
 
 from flask import Blueprint, jsonify, request
@@ -28,11 +29,13 @@ def list_leaves():
             response = container.leaves_use_case.get_all_leaves(year)
 
         if response.success:
-            return jsonify({
-                "success": True,
-                "leaves": [l.to_dict() for l in response.leaves],
-                "count": response.count
-            })
+            return jsonify(
+                {
+                    "success": True,
+                    "leaves": [l.to_dict() for l in response.leaves],
+                    "count": response.count,
+                }
+            )
         else:
             return jsonify({"success": False, "error": response.error}), 400
 
@@ -78,10 +81,7 @@ def add_leave():
         response = container.leaves_use_case.add_leave(req)
 
         if response.success:
-            return jsonify({
-                "success": True,
-                "leave": response.leave.to_dict()
-            })
+            return jsonify({"success": True, "leave": response.leave.to_dict()})
         else:
             return jsonify({"success": False, "error": response.error}), 400
 
@@ -126,16 +126,17 @@ def working_days():
         response = container.working_days_use_case.execute(year, month)
 
         if response.success:
-            return jsonify({
-                "success": True,
-                "total_weekdays": response.total_weekdays,
-                "leaves": response.leaves,
-                "working_days": response.working_days,
-                "leave_dates": response.leave_dates or []
-            })
+            return jsonify(
+                {
+                    "success": True,
+                    "total_weekdays": response.total_weekdays,
+                    "leaves": response.leaves,
+                    "working_days": response.working_days,
+                    "leave_dates": response.leave_dates or [],
+                }
+            )
         else:
             return jsonify({"success": False, "error": response.error}), 400
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
-

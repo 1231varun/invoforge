@@ -1,4 +1,5 @@
 """Invoice API routes"""
+
 from datetime import datetime
 from pathlib import Path
 
@@ -22,10 +23,7 @@ def generate():
 
     try:
         invoice_date = datetime.strptime(data["invoice_date"], "%Y-%m-%d").date()
-        leave_dates = [
-            datetime.strptime(d, "%Y-%m-%d").date()
-            for d in data.get("leave_dates", [])
-        ]
+        leave_dates = [datetime.strptime(d, "%Y-%m-%d").date() for d in data.get("leave_dates", [])]
 
         req = GenerateInvoiceRequest(
             invoice_number=int(data["invoice_number"]),
@@ -35,28 +33,30 @@ def generate():
             leaves_taken=int(data.get("leaves_taken", 0)),
             leave_dates=leave_dates,
             rate=float(data["rate"]) if data.get("rate") else None,
-            output_format=data.get("output_format", "pdf")
+            output_format=data.get("output_format", "pdf"),
         )
 
         response = container.generate_invoice_use_case.execute(req)
 
         if response.success:
-            return jsonify({
-                "success": True,
-                "invoice": {
-                    "number": response.invoice.invoice_number,
-                    "date": response.invoice.invoice_date.isoformat(),
-                    "service_period": response.invoice.service_period,
-                    "days_worked": response.invoice.days_worked,
-                    "amount": response.invoice.amount,
-                    "amount_in_words": response.invoice.amount_in_words
-                },
-                "files": {
-                    "docx": response.docx_filename,
-                    "pdf": response.pdf_filename,
-                    "pdf_error": response.pdf_error
+            return jsonify(
+                {
+                    "success": True,
+                    "invoice": {
+                        "number": response.invoice.invoice_number,
+                        "date": response.invoice.invoice_date.isoformat(),
+                        "service_period": response.invoice.service_period,
+                        "days_worked": response.invoice.days_worked,
+                        "amount": response.invoice.amount,
+                        "amount_in_words": response.invoice.amount_in_words,
+                    },
+                    "files": {
+                        "docx": response.docx_filename,
+                        "pdf": response.pdf_filename,
+                        "pdf_error": response.pdf_error,
+                    },
                 }
-            })
+            )
         else:
             return jsonify({"success": False, "error": response.error}), 400
 
@@ -72,10 +72,7 @@ def preview():
 
     try:
         invoice_date = datetime.strptime(data["invoice_date"], "%Y-%m-%d").date()
-        leave_dates = [
-            datetime.strptime(d, "%Y-%m-%d").date()
-            for d in data.get("leave_dates", [])
-        ]
+        leave_dates = [datetime.strptime(d, "%Y-%m-%d").date() for d in data.get("leave_dates", [])]
 
         req = PreviewInvoiceRequest(
             invoice_number=int(data["invoice_number"]),
@@ -84,22 +81,24 @@ def preview():
             total_working_days=int(data["total_working_days"]),
             leaves_taken=int(data.get("leaves_taken", 0)),
             leave_dates=leave_dates,
-            rate=float(data["rate"]) if data.get("rate") else None
+            rate=float(data["rate"]) if data.get("rate") else None,
         )
 
         response = container.preview_invoice_use_case.execute(req)
 
         if response.success:
-            return jsonify({
-                "success": True,
-                "preview": {
-                    "service_period": response.service_period,
-                    "days_worked": response.days_worked,
-                    "amount": response.amount,
-                    "total_payable": response.total_payable,
-                    "amount_in_words": response.amount_in_words
+            return jsonify(
+                {
+                    "success": True,
+                    "preview": {
+                        "service_period": response.service_period,
+                        "days_worked": response.days_worked,
+                        "amount": response.amount,
+                        "total_payable": response.total_payable,
+                        "amount_in_words": response.amount_in_words,
+                    },
                 }
-            })
+            )
         else:
             return jsonify({"success": False, "error": response.error}), 400
 
@@ -123,10 +122,7 @@ def preview_html():
         # Generate HTML preview
         html = container.html_preview_generator.generate_from_data(data, settings)
 
-        return jsonify({
-            "success": True,
-            "html": html
-        })
+        return jsonify({"success": True, "html": html})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 
@@ -138,11 +134,13 @@ def list_invoices():
 
     try:
         invoices = container.invoice_repository.get_all()
-        return jsonify({
-            "success": True,
-            "invoices": [inv.to_dict() for inv in invoices],
-            "count": len(invoices)
-        })
+        return jsonify(
+            {
+                "success": True,
+                "invoices": [inv.to_dict() for inv in invoices],
+                "count": len(invoices),
+            }
+        )
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 
@@ -176,11 +174,9 @@ def delete_invoice(invoice_id: int):
         # Get the new next invoice number
         next_number = container.invoice_repository.get_next_number()
 
-        return jsonify({
-            "success": success,
-            "files_deleted": files_deleted,
-            "next_invoice_number": next_number
-        })
+        return jsonify(
+            {"success": success, "files_deleted": files_deleted, "next_invoice_number": next_number}
+        )
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 
@@ -190,10 +186,7 @@ def next_invoice_number():
     """Get the next invoice number"""
     container = get_container()
 
-    return jsonify({
-        "success": True,
-        "next_number": container.invoice_repository.get_next_number()
-    })
+    return jsonify({"success": True, "next_number": container.invoice_repository.get_next_number()})
 
 
 @invoices_bp.route("/invoices/<int:invoice_id>/preview", methods=["GET"])
@@ -211,10 +204,7 @@ def preview_stored_invoice(invoice_id: int):
         # Generate preview HTML using the stored invoice data
         html = container.html_preview_generator.generate_from_record(invoice_record, settings)
 
-        return jsonify({
-            "success": True,
-            "html": html
-        })
+        return jsonify({"success": True, "html": html})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 
@@ -227,9 +217,4 @@ def download(filename: str):
     if not filepath.exists():
         return jsonify({"error": f"File not found: {filename}"}), 404
 
-    return send_file(
-        str(filepath.absolute()),
-        as_attachment=True,
-        download_name=filename
-    )
-
+    return send_file(str(filepath.absolute()), as_attachment=True, download_name=filename)

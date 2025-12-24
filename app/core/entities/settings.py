@@ -1,4 +1,5 @@
 """Settings domain entity"""
+
 from dataclasses import dataclass
 from typing import Any, Dict
 
@@ -6,6 +7,7 @@ from typing import Any, Dict
 @dataclass
 class Settings:
     """Application settings / configuration"""
+
     # Billing
     daily_rate: float = 0.0
     currency: str = "EUR"
@@ -65,7 +67,7 @@ class Settings:
             "account_holder": self.account_holder,
             "swift_code": self.swift_code,
             "signatory_name": self.signatory_name,
-            "setup_complete": self.setup_complete
+            "setup_complete": self.setup_complete,
         }
 
     @classmethod
@@ -86,12 +88,13 @@ class Settings:
             client_address=data.get("client_address", ""),
             client_country=data.get("client_country", ""),
             client_email=data.get("client_email", ""),
-            service_description=data.get("service_description", "Professional / IT / Consulting Services (SAC: 9983)"),
+            service_description=data.get(
+                "service_description", "Professional / IT / Consulting Services (SAC: 9983)"
+            ),
             bank_name=data.get("bank_name", ""),
             account_no=data.get("account_no", ""),
             account_holder=data.get("account_holder", ""),
             swift_code=data.get("swift_code", ""),
             signatory_name=data.get("signatory_name", ""),
-            setup_complete=str(data.get("setup_complete", "false")).lower() == "true"
+            setup_complete=str(data.get("setup_complete", "false")).lower() == "true",
         )
-

@@ -9,6 +9,5 @@ __all__ = [
     "ManageLeavesUseCase",
     "ManageSettingsUseCase",
     "GetDashboardUseCase",
-    "GetWorkingDaysUseCase"
+    "GetWorkingDaysUseCase",
 ]
-

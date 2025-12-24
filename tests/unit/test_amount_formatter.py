@@ -8,7 +8,6 @@ Tests cover:
 - Edge cases (zero, large numbers, no cents)
 """
 
-
 from app.core.services.amount_formatter import AmountFormatter
 
 
@@ -82,4 +81,3 @@ class TestToWords:
         # 0.555 should round to 56 cents (banker's rounding may vary)
         result = amount_formatter.to_words(100.55, "EUR")
         assert "Fifty-Five Cents" in result or "Fifty Five Cents" in result
-

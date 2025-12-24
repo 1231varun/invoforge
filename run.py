@@ -4,6 +4,7 @@ InvoForge - Development Server
 
 Run with: python3 run.py
 """
+
 import os
 import sys
 from pathlib import Path

@@ -1,4 +1,5 @@
 """Settings API routes"""
+
 from flask import Blueprint, jsonify, request
 
 from app.container import get_container
@@ -24,10 +25,7 @@ def get_settings():
         response = container.settings_use_case.get_settings()
 
         if response.success:
-            return jsonify({
-                "success": True,
-                "settings": response.settings.to_dict()
-            })
+            return jsonify({"success": True, "settings": response.settings.to_dict()})
         else:
             return jsonify({"success": False, "error": response.error}), 400
 
@@ -51,4 +49,3 @@ def save_settings():
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
-

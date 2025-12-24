@@ -8,7 +8,7 @@ from app.core.services.working_days_calculator import WorkingDaysCalculator
 class InvoiceCalculator:
     """
     Core business logic for invoice calculations.
-    
+
     Responsible for:
     - Calculating service period from invoice date
     - Computing days worked
@@ -19,7 +19,7 @@ class InvoiceCalculator:
     def __init__(
         self,
         working_days_calculator: WorkingDaysCalculator = None,
-        amount_formatter: AmountFormatter = None
+        amount_formatter: AmountFormatter = None,
     ):
         self._working_days = working_days_calculator or WorkingDaysCalculator()
         self._formatter = amount_formatter or AmountFormatter()
@@ -31,7 +31,7 @@ class InvoiceCalculator:
     def create_invoice(self, input_data: InvoiceInput, currency: str = "EUR") -> Invoice:
         """
         Create an Invoice entity from input data.
-        
+
         Performs all calculations and returns an immutable Invoice.
         """
         # Calculate service period
@@ -59,6 +59,5 @@ class InvoiceCalculator:
             rate=input_data.rate,
             amount=amount,
             total_payable=amount,
-            amount_in_words=amount_words
+            amount_in_words=amount_words,
         )
-

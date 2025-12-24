@@ -1,4 +1,5 @@
 """DOCX Document Generator Implementation"""
+
 from pathlib import Path
 from typing import Optional
 
@@ -19,7 +20,7 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 class DocxGenerator(DocumentGenerator):
     """
     Generates DOCX invoices using python-docx.
-    
+
     Creates professional export invoices with proper Calibri formatting,
     consistent spacing, and styled tables.
     """
@@ -58,7 +59,7 @@ class DocxGenerator(DocumentGenerator):
     def _configure_document(self, doc: Document):
         """Configure document styles and margins for single-page invoice"""
         # Set default font for entire document
-        style = doc.styles['Normal']
+        style = doc.styles["Normal"]
         style.font.name = self.FONT_NAME
         style.font.size = self.FONT_SIZE
         style.paragraph_format.space_after = self.SPACING_AFTER
@@ -68,10 +69,10 @@ class DocxGenerator(DocumentGenerator):
         # Ensure font applies to all character types
         rPr = style._element.get_or_add_rPr()
         rFonts = rPr.get_or_add_rFonts()
-        rFonts.set(qn('w:ascii'), self.FONT_NAME)
-        rFonts.set(qn('w:hAnsi'), self.FONT_NAME)
-        rFonts.set(qn('w:eastAsia'), self.FONT_NAME)
-        rFonts.set(qn('w:cs'), self.FONT_NAME)
+        rFonts.set(qn("w:ascii"), self.FONT_NAME)
+        rFonts.set(qn("w:hAnsi"), self.FONT_NAME)
+        rFonts.set(qn("w:eastAsia"), self.FONT_NAME)
+        rFonts.set(qn("w:cs"), self.FONT_NAME)
 
         # Set compact margins for single-page layout
         for section in doc.sections:
@@ -90,20 +91,28 @@ class DocxGenerator(DocumentGenerator):
         r = run._element
         rPr = r.get_or_add_rPr()
         rFonts = rPr.get_or_add_rFonts()
-        rFonts.set(qn('w:ascii'), self.FONT_NAME)
-        rFonts.set(qn('w:hAnsi'), self.FONT_NAME)
-        rFonts.set(qn('w:eastAsia'), self.FONT_NAME)
-        rFonts.set(qn('w:cs'), self.FONT_NAME)
+        rFonts.set(qn("w:ascii"), self.FONT_NAME)
+        rFonts.set(qn("w:hAnsi"), self.FONT_NAME)
+        rFonts.set(qn("w:eastAsia"), self.FONT_NAME)
+        rFonts.set(qn("w:cs"), self.FONT_NAME)
 
-    def _set_paragraph_spacing(self, paragraph, space_after: Optional[Pt] = None, space_before: Optional[Pt] = None):
+    def _set_paragraph_spacing(
+        self, paragraph, space_after: Optional[Pt] = None, space_before: Optional[Pt] = None
+    ):
         """Set paragraph spacing"""
         pf = paragraph.paragraph_format
         pf.space_after = space_after if space_after is not None else self.SPACING_AFTER
         pf.space_before = space_before if space_before is not None else Pt(0)
         pf.line_spacing_rule = WD_LINE_SPACING.SINGLE
 
-    def _add_paragraph(self, doc: Document, text: str, bold: bool = False,
-                       size: Optional[Pt] = None, space_after: Optional[Pt] = None) -> object:
+    def _add_paragraph(
+        self,
+        doc: Document,
+        text: str,
+        bold: bool = False,
+        size: Optional[Pt] = None,
+        space_after: Optional[Pt] = None,
+    ) -> object:
         """Add a formatted paragraph"""
         p = doc.add_paragraph()
         run = p.add_run(text)
@@ -128,7 +137,7 @@ class DocxGenerator(DocumentGenerator):
             doc,
             f"Service Period: {invoice.service_period_start.isoformat()} "
             f"to {invoice.service_period_end.isoformat()}",
-            space_after=self.SECTION_SPACING
+            space_after=self.SECTION_SPACING,
         )
 
     def _add_supplier_details(self, doc: Document, settings: Settings):
@@ -139,7 +148,9 @@ class DocxGenerator(DocumentGenerator):
                 self._add_paragraph(doc, line)
         self._add_paragraph(doc, f"GSTIN: {settings.gstin}", space_after=Pt(1))
         self._add_paragraph(doc, f"PAN: {settings.pan}", space_after=Pt(1))
-        self._add_paragraph(doc, f"Email: {settings.supplier_email}", space_after=self.SECTION_SPACING)
+        self._add_paragraph(
+            doc, f"Email: {settings.supplier_email}", space_after=self.SECTION_SPACING
+        )
 
     def _add_export_details(self, doc: Document, invoice: Invoice, settings: Settings):
         """Add export and LUT details"""
@@ -148,7 +159,7 @@ class DocxGenerator(DocumentGenerator):
         self._add_paragraph(
             doc,
             f"LUT No.: {settings.lut_no}     Validity: FY {invoice.validity_year}",
-            space_after=self.SECTION_SPACING
+            space_after=self.SECTION_SPACING,
         )
 
     def _add_client_details(self, doc: Document, settings: Settings):
@@ -159,7 +170,7 @@ class DocxGenerator(DocumentGenerator):
         self._add_paragraph(
             doc,
             f"Country: {settings.client_country}    Email: {settings.client_email}",
-            space_after=self.SECTION_SPACING
+            space_after=self.SECTION_SPACING,
         )
 
     def _add_working_days(self, doc: Document, invoice: Invoice):
@@ -192,53 +203,58 @@ class DocxGenerator(DocumentGenerator):
         tbl = table._tbl
 
         # Find or create tblPr element
-        tblPr = tbl.find(qn('w:tblPr'))
+        tblPr = tbl.find(qn("w:tblPr"))
         if tblPr is None:
-            tblPr = OxmlElement('w:tblPr')
+            tblPr = OxmlElement("w:tblPr")
             tbl.insert(0, tblPr)
 
         # Remove existing borders if any
-        existing_borders = tblPr.find(qn('w:tblBorders'))
+        existing_borders = tblPr.find(qn("w:tblBorders"))
         if existing_borders is not None:
             tblPr.remove(existing_borders)
 
         # Create new borders
-        tblBorders = OxmlElement('w:tblBorders')
+        tblBorders = OxmlElement("w:tblBorders")
 
-        for border_name in ['top', 'left', 'bottom', 'right', 'insideH', 'insideV']:
-            border = OxmlElement(f'w:{border_name}')
-            border.set(qn('w:val'), 'single')
-            border.set(qn('w:sz'), '4')  # 1/2 pt
-            border.set(qn('w:space'), '0')
-            border.set(qn('w:color'), '000000')
+        for border_name in ["top", "left", "bottom", "right", "insideH", "insideV"]:
+            border = OxmlElement(f"w:{border_name}")
+            border.set(qn("w:val"), "single")
+            border.set(qn("w:sz"), "4")  # 1/2 pt
+            border.set(qn("w:space"), "0")
+            border.set(qn("w:color"), "000000")
             tblBorders.append(border)
 
         tblPr.append(tblBorders)
 
-    def _set_cell_padding(self, cell, top: int = 60, bottom: int = 60,
-                          left: int = 80, right: int = 80):
+    def _set_cell_padding(
+        self, cell, top: int = 60, bottom: int = 60, left: int = 80, right: int = 80
+    ):
         """Set cell padding in twips"""
         tc = cell._tc
 
         # Find or create tcPr element
-        tcPr = tc.find(qn('w:tcPr'))
+        tcPr = tc.find(qn("w:tcPr"))
         if tcPr is None:
-            tcPr = OxmlElement('w:tcPr')
+            tcPr = OxmlElement("w:tcPr")
             tc.insert(0, tcPr)
 
         # Remove existing margins if any
-        existing_mar = tcPr.find(qn('w:tcMar'))
+        existing_mar = tcPr.find(qn("w:tcMar"))
         if existing_mar is not None:
             tcPr.remove(existing_mar)
 
         # Create new margins
-        tcMar = OxmlElement('w:tcMar')
+        tcMar = OxmlElement("w:tcMar")
 
-        for margin_name, margin_value in [('top', top), ('bottom', bottom),
-                                           ('left', left), ('right', right)]:
-            margin = OxmlElement(f'w:{margin_name}')
-            margin.set(qn('w:w'), str(margin_value))
-            margin.set(qn('w:type'), 'dxa')
+        for margin_name, margin_value in [
+            ("top", top),
+            ("bottom", bottom),
+            ("left", left),
+            ("right", right),
+        ]:
+            margin = OxmlElement(f"w:{margin_name}")
+            margin.set(qn("w:w"), str(margin_value))
+            margin.set(qn("w:type"), "dxa")
             tcMar.append(margin)
 
         tcPr.append(tcMar)
@@ -293,11 +309,11 @@ class DocxGenerator(DocumentGenerator):
     def _add_totals(self, doc: Document, invoice: Invoice, settings: Settings):
         """Add totals section"""
         self._add_paragraph(doc, "Tax: Export Without Payment of IGST under LUT")
-        self._add_paragraph(doc, f"Total Payable ({settings.currency}): {invoice.total_payable:.2f}")
         self._add_paragraph(
-            doc,
-            f"Total in Words: {invoice.amount_in_words}",
-            space_after=self.SECTION_SPACING
+            doc, f"Total Payable ({settings.currency}): {invoice.total_payable:.2f}"
+        )
+        self._add_paragraph(
+            doc, f"Total in Words: {invoice.amount_in_words}", space_after=self.SECTION_SPACING
         )
 
     def _add_bank_details(self, doc: Document, settings: Settings):
@@ -308,7 +324,7 @@ class DocxGenerator(DocumentGenerator):
             f"A/c No: {settings.account_no} | "
             f"Bank: {settings.bank_name} | "
             f"SWIFT: {settings.swift_code}",
-            space_after=self.SECTION_SPACING
+            space_after=self.SECTION_SPACING,
         )
 
     def _add_declaration(self, doc: Document):
@@ -318,7 +334,7 @@ class DocxGenerator(DocumentGenerator):
             "Declaration: This invoice is issued as Export of Services without payment "
             "of IGST under LUT as per Sec. 16 of IGST Act. Payment will be received in "
             "foreign currency. No GST charged.",
-            space_after=self.SECTION_SPACING
+            space_after=self.SECTION_SPACING,
         )
 
     def _add_signature(self, doc: Document, settings: Settings):
@@ -328,7 +344,7 @@ class DocxGenerator(DocumentGenerator):
         signatory = settings.signatory_name
         if not signatory and settings.supplier_name:
             # Extract name without parenthetical as fallback
-            signatory = settings.supplier_name.split('(')[0].strip()
+            signatory = settings.supplier_name.split("(")[0].strip()
         if signatory:
             self._add_paragraph(doc, signatory)
 

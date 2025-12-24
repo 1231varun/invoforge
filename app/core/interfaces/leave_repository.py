@@ -1,4 +1,5 @@
 """Leave repository interface (port)"""
+
 from abc import ABC, abstractmethod
 from datetime import date
 from typing import List, Optional
@@ -43,4 +44,3 @@ class LeaveRepository(ABC):
     def get_all(self, year: Optional[int] = None) -> List[Leave]:
         """Get all leaves, optionally filtered by year"""
         pass
-

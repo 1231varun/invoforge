@@ -7,6 +7,5 @@ __all__ = [
     "Database",
     "SQLiteInvoiceRepository",
     "SQLiteLeaveRepository",
-    "SQLiteSettingsRepository"
+    "SQLiteSettingsRepository",
 ]
-

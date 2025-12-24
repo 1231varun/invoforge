@@ -9,6 +9,5 @@ __all__ = [
     "LeaveRepository",
     "SettingsRepository",
     "DocumentGenerator",
-    "PDFConverter"
+    "PDFConverter",
 ]
-

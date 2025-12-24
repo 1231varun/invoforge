@@ -1,4 +1,5 @@
 """Route modules for different domains"""
+
 from app.presentation.routes.dashboard import dashboard_bp
 from app.presentation.routes.invoices import invoices_bp
 from app.presentation.routes.leaves import leaves_bp
@@ -13,4 +14,3 @@ def register_routes(app):
     app.register_blueprint(leaves_bp, url_prefix="/api")
     app.register_blueprint(settings_bp, url_prefix="/api")
     app.register_blueprint(dashboard_bp, url_prefix="/api")
-

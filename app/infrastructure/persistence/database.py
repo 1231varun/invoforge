@@ -1,4 +1,5 @@
 """SQLite Database Connection Manager"""
+
 import sqlite3
 from collections.abc import Generator
 from contextlib import contextmanager
@@ -11,7 +12,7 @@ DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "invoices.db"
 class Database:
     """
     SQLite database connection manager.
-    
+
     Provides connection pooling and schema initialization.
     """
 
@@ -42,9 +43,7 @@ class Database:
                     reason TEXT DEFAULT ''
                 )
             """)
-            conn.execute(
-                "CREATE INDEX IF NOT EXISTS idx_leave_date ON leaves(leave_date)"
-            )
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_leave_date ON leaves(leave_date)")
 
             # Invoices table
             conn.execute("""
@@ -61,9 +60,7 @@ class Database:
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
-            conn.execute(
-                "CREATE INDEX IF NOT EXISTS idx_invoice_date ON invoices(invoice_date)"
-            )
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_invoice_date ON invoices(invoice_date)")
 
             # Settings table
             conn.execute("""
@@ -72,4 +69,3 @@ class Database:
                     value TEXT
                 )
             """)
-

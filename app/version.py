@@ -19,9 +19,9 @@ GITHUB_RELEASES_URL = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO
 def parse_version(version_str: str) -> tuple:
     """Parse version string to tuple for comparison (e.g., '1.0.0' -> (1, 0, 0))"""
     # Remove 'v' prefix if present
-    version_str = version_str.lstrip('v')
+    version_str = version_str.lstrip("v")
     try:
-        parts = version_str.split('.')
+        parts = version_str.split(".")
         return tuple(int(p) for p in parts[:3])
     except (ValueError, AttributeError):
         return (0, 0, 0)
@@ -32,4 +32,3 @@ def is_newer_version(remote_version: str, current_version: str = __version__) ->
     remote = parse_version(remote_version)
     current = parse_version(current_version)
     return remote > current
-

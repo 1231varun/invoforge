@@ -1,4 +1,5 @@
 """Invoice Template Entity - Defines customizable invoice sections"""
+
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional
@@ -6,6 +7,7 @@ from typing import Any, Dict, List, Optional
 
 class FieldType(Enum):
     """Types of form fields"""
+
     TEXT = "text"
     NUMBER = "number"
     DATE = "date"
@@ -18,6 +20,7 @@ class FieldType(Enum):
 @dataclass
 class TemplateField:
     """A single field in the invoice template"""
+
     id: str
     label: str
     field_type: FieldType
@@ -40,13 +43,14 @@ class TemplateField:
             "options": self.options,
             "help_text": self.help_text,
             "section": self.section,
-            "order": self.order
+            "order": self.order,
         }
 
 
 @dataclass
 class TemplateSection:
     """A section of the invoice (e.g., Header, Client Details, Services)"""
+
     id: str
     title: str
     fields: List[TemplateField] = field(default_factory=list)
@@ -59,7 +63,7 @@ class TemplateSection:
             "title": self.title,
             "fields": [f.to_dict() for f in sorted(self.fields, key=lambda x: x.order)],
             "order": self.order,
-            "collapsible": self.collapsible
+            "collapsible": self.collapsible,
         }
 
 
@@ -67,10 +71,11 @@ class TemplateSection:
 class InvoiceTemplate:
     """
     Defines the structure and fields of an invoice.
-    
+
     This allows customization of what appears in the invoice and
     how the form is presented to the user.
     """
+
     id: str
     name: str
     description: str
@@ -96,7 +101,7 @@ class InvoiceTemplate:
             "name": self.name,
             "description": self.description,
             "sections": [s.to_dict() for s in sorted(self.sections, key=lambda x: x.order)],
-            "currency": self.currency
+            "currency": self.currency,
         }
 
 
@@ -119,7 +124,7 @@ def create_default_export_invoice_template() -> InvoiceTemplate:
                         field_type=FieldType.NUMBER,
                         required=True,
                         section="invoice_details",
-                        order=1
+                        order=1,
                     ),
                     TemplateField(
                         id="invoice_date",
@@ -127,7 +132,7 @@ def create_default_export_invoice_template() -> InvoiceTemplate:
                         field_type=FieldType.DATE,
                         required=True,
                         section="invoice_details",
-                        order=2
+                        order=2,
                     ),
                     TemplateField(
                         id="validity_year",
@@ -136,9 +141,9 @@ def create_default_export_invoice_template() -> InvoiceTemplate:
                         options=["2024-25", "2025-26", "2026-27", "2027-28", "2028-29"],
                         default_value="2025-26",
                         section="invoice_details",
-                        order=3
-                    )
-                ]
+                        order=3,
+                    ),
+                ],
             ),
             TemplateSection(
                 id="working_days",
@@ -152,7 +157,7 @@ def create_default_export_invoice_template() -> InvoiceTemplate:
                         required=True,
                         help_text="Auto-calculated from weekdays minus leaves",
                         section="working_days",
-                        order=1
+                        order=1,
                     ),
                     TemplateField(
                         id="leaves_taken",
@@ -161,9 +166,9 @@ def create_default_export_invoice_template() -> InvoiceTemplate:
                         default_value=0,
                         help_text="Fetched from leave calendar",
                         section="working_days",
-                        order=2
-                    )
-                ]
+                        order=2,
+                    ),
+                ],
             ),
             TemplateSection(
                 id="billing",
@@ -177,10 +182,9 @@ def create_default_export_invoice_template() -> InvoiceTemplate:
                         required=True,
                         placeholder="e.g., 100.00",
                         section="billing",
-                        order=1
+                        order=1,
                     )
-                ]
-            )
-        ]
+                ],
+            ),
+        ],
     )
-

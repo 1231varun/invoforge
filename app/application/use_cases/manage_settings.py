@@ -1,4 +1,5 @@
 """Manage Settings Use Case"""
+
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
@@ -48,6 +49,5 @@ class ManageSettingsUseCase:
         return {
             "rate": settings.daily_rate,
             "currency": settings.currency,
-            "setup_complete": settings.setup_complete
+            "setup_complete": settings.setup_complete,
         }
-

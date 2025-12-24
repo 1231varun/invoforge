@@ -194,4 +194,3 @@ class TestEdgeCases:
         invoice = invoice_calculator.create_invoice(input_data, "EUR")
 
         assert invoice.service_period_end == date(2024, 2, 29)
-

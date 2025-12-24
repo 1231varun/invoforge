@@ -1,4 +1,5 @@
 """Invoice repository interface (port)"""
+
 from abc import ABC, abstractmethod
 from datetime import date
 from typing import List, Optional
@@ -19,7 +20,7 @@ class InvoiceRepository(ABC):
         days_worked: int,
         amount: float,
         docx_path: str,
-        pdf_path: Optional[str] = None
+        pdf_path: Optional[str] = None,
     ) -> InvoiceRecord:
         """Save a new invoice record"""
         pass
@@ -48,4 +49,3 @@ class InvoiceRepository(ABC):
     def get_last_number(self) -> int:
         """Get the last used invoice number"""
         pass
-

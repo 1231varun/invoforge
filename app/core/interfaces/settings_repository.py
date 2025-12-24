@@ -1,4 +1,5 @@
 """Settings repository interface (port)"""
+
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
@@ -32,4 +33,3 @@ class SettingsRepository(ABC):
     def is_setup_complete(self) -> bool:
         """Check if initial setup has been completed"""
         pass
-

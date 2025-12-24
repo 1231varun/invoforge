@@ -171,9 +171,7 @@ class TestPreviewInvoiceUseCase:
     def test_uses_provided_rate_over_settings(self):
         """Rate from request takes precedence over settings."""
         # Arrange
-        mock_settings = self._create_mock_settings_repo(
-            Settings(daily_rate=50.00, currency="EUR")
-        )
+        mock_settings = self._create_mock_settings_repo(Settings(daily_rate=50.00, currency="EUR"))
         use_case = PreviewInvoiceUseCase(
             settings_repository=mock_settings,
             invoice_calculator=InvoiceCalculator(),
@@ -198,9 +196,7 @@ class TestPreviewInvoiceUseCase:
     def test_falls_back_to_settings_rate(self):
         """Uses settings rate when request rate is None."""
         # Arrange
-        mock_settings = self._create_mock_settings_repo(
-            Settings(daily_rate=75.00, currency="EUR")
-        )
+        mock_settings = self._create_mock_settings_repo(Settings(daily_rate=75.00, currency="EUR"))
         use_case = PreviewInvoiceUseCase(
             settings_repository=mock_settings,
             invoice_calculator=InvoiceCalculator(),
@@ -225,9 +221,7 @@ class TestPreviewInvoiceUseCase:
     def test_uses_settings_currency(self):
         """Currency from settings is used in formatting."""
         # Arrange
-        mock_settings = self._create_mock_settings_repo(
-            Settings(daily_rate=100.00, currency="USD")
-        )
+        mock_settings = self._create_mock_settings_repo(Settings(daily_rate=100.00, currency="USD"))
         use_case = PreviewInvoiceUseCase(
             settings_repository=mock_settings,
             invoice_calculator=InvoiceCalculator(),
@@ -302,4 +296,3 @@ class TestPreviewInvoiceUseCase:
         # Assert
         assert result.amount_in_words is not None
         assert "Euros" in result.amount_in_words
-

@@ -110,4 +110,3 @@ def january_2025_leaves() -> list[Leave]:
         Leave(id=2, leave_date=date(2025, 1, 7), reason="Sick"),  # Tuesday
         Leave(id=3, leave_date=date(2025, 1, 4), reason="Weekend"),  # Saturday (shouldn't count)
     ]
-

@@ -1,4 +1,5 @@
 """Invoice domain entity"""
+
 from dataclasses import dataclass
 from datetime import date
 from typing import List, Optional
@@ -7,6 +8,7 @@ from typing import List, Optional
 @dataclass(frozen=True)
 class InvoiceInput:
     """Input data for creating an invoice"""
+
     invoice_number: int
     invoice_date: date
     validity_year: str
@@ -19,6 +21,7 @@ class InvoiceInput:
 @dataclass(frozen=True)
 class Invoice:
     """Core invoice entity representing a generated invoice"""
+
     invoice_number: int
     invoice_date: date
     service_period_start: date
@@ -41,6 +44,7 @@ class Invoice:
 @dataclass
 class InvoiceRecord:
     """Stored invoice record with file paths"""
+
     id: Optional[int]
     invoice_number: int
     invoice_date: date
@@ -54,6 +58,7 @@ class InvoiceRecord:
 
     def to_dict(self) -> dict:
         from pathlib import Path
+
         return {
             "id": self.id,
             "invoice_number": self.invoice_number,
@@ -65,6 +70,5 @@ class InvoiceRecord:
             "pdf_path": self.pdf_path,
             "docx_filename": Path(self.docx_path).name if self.docx_path else None,
             "pdf_filename": Path(self.pdf_path).name if self.pdf_path else None,
-            "created_at": self.created_at
+            "created_at": self.created_at,
         }
-

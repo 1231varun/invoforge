@@ -140,4 +140,3 @@ class TestGetServicePeriod:
 
         assert start == date(2025, 4, 1)
         assert end == date(2025, 4, 30)
-

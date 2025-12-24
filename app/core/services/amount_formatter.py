@@ -1,4 +1,5 @@
 """Amount formatting service"""
+
 from num2words import num2words
 
 
@@ -15,7 +16,7 @@ class AmountFormatter:
     def to_words(self, amount: float, currency: str = "EUR") -> str:
         """
         Convert a monetary amount to words.
-        
+
         Example: 6194.60 EUR -> "Six Thousand, One Hundred Ninety-Four Euros and Sixty Cents"
         """
         currency_name = self.CURRENCY_NAMES.get(currency.upper(), currency)
@@ -30,4 +31,3 @@ class AmountFormatter:
             return f"{whole_words} {currency_name} and {cents_words} Cents"
 
         return f"{whole_words} {currency_name}"
-
