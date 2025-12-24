@@ -5,7 +5,11 @@ All notable changes to InvoForge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.4] - 2024-12-25
+## [0.1.5] - 2024-12-25
+
+### Added
+- **Quit App Button** - Standalone apps now have a power button in the header to gracefully shutdown the server (no more "item in use" errors when updating!)
+
 
 ### Added
 - **Persistent Data Storage** - User data (database, invoices) now stored in platform-appropriate locations that persist across app updates
@@ -13,6 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Data Loss on Update** - Previously, replacing the app would lose all settings, leaves, and invoice history. Now data persists in user's home directory
+
+### Changed
+- Updated docs to require `make install-dev` for automatic pre-commit hook setup
+
+## [0.1.4] - 2024-12-25
+
+### Added
+- Previous release (see GitHub)
 
 ## [0.1.3] - 2024-12-25
 
@@ -122,9 +134,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.1.5]: https://github.com/1231varun/invoforge/releases/tag/v0.1.5
 [0.1.4]: https://github.com/1231varun/invoforge/releases/tag/v0.1.4
 [0.1.3]: https://github.com/1231varun/invoforge/releases/tag/v0.1.3
 [0.1.2]: https://github.com/1231varun/invoforge/releases/tag/v0.1.2
 [0.1.1]: https://github.com/1231varun/invoforge/releases/tag/v0.1.1
 [0.1.0]: https://github.com/1231varun/invoforge/releases/tag/v0.1.0
-[Unreleased]: https://github.com/1231varun/invoforge/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/1231varun/invoforge/compare/v0.1.5...HEAD

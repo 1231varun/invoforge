@@ -1,14 +1,21 @@
 """Page routes - HTML views"""
 
+import os
+import signal
 from datetime import datetime
 from pathlib import Path
 
-from flask import Blueprint, redirect, render_template, url_for
+from flask import Blueprint, jsonify, redirect, render_template, url_for
 
 from app.container import get_container
 from app.version import COPYRIGHT_START_YEAR, __version__
 
 pages_bp = Blueprint("pages", __name__)
+
+
+def is_standalone_mode() -> bool:
+    """Check if running as standalone app (not dev server)"""
+    return os.environ.get("INVOFORGE_DATA") is not None
 
 
 def get_copyright_year():
@@ -21,7 +28,12 @@ def get_copyright_year():
 
 def get_template_context(**kwargs):
     """Get common template context with version and year"""
-    return {"version": __version__, "year": get_copyright_year(), **kwargs}
+    return {
+        "version": __version__,
+        "year": get_copyright_year(),
+        "is_standalone": is_standalone_mode(),
+        **kwargs,
+    }
 
 
 # Static directory for PWA assets
@@ -117,3 +129,23 @@ def setup():
 
     settings = container.settings_use_case.get_settings().settings
     return render_template("setup.html", **get_template_context(defaults=settings))
+
+
+@pages_bp.route("/api/quit", methods=["POST"])
+def quit_app():
+    """Gracefully shutdown the standalone app"""
+    if not is_standalone_mode():
+        return jsonify({"error": "Only available in standalone mode"}), 403
+
+    def shutdown():
+        """Shutdown after response is sent"""
+        import time
+
+        time.sleep(0.5)
+        os.kill(os.getpid(), signal.SIGTERM)
+
+    import threading
+
+    threading.Thread(target=shutdown, daemon=True).start()
+
+    return jsonify({"success": True, "message": "Shutting down..."})

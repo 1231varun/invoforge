@@ -252,6 +252,32 @@ body {
     display: none;
 }
 
+/* Quit App Button (standalone only) */
+.quit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--danger-light);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--danger);
+    margin-left: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.quit-btn:hover {
+    background: var(--danger);
+    color: white;
+}
+
+.quit-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
 /* ===== Main Content ===== */
 .main {
     flex: 1;

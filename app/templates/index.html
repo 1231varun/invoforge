@@ -29,7 +29,7 @@
     <!-- Lucide Icons (MIT License) -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
-    <link rel="stylesheet" href="/static/css/styles.css?v=16">
+    <link rel="stylesheet" href="/static/css/styles.css?v=17">
     {% if active_tab == 'leaves' %}
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     {% endif %}
@@ -89,6 +89,11 @@
                     <i data-lucide="sun" class="theme-icon-light"></i>
                     <i data-lucide="moon" class="theme-icon-dark"></i>
                 </button>
+                {% if is_standalone %}
+                <button type="button" class="quit-btn" id="quit-btn" title="Quit InvoForge">
+                    <i data-lucide="power"></i>
+                </button>
+                {% endif %}
             </nav>
         </header>
 

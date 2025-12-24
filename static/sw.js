@@ -9,7 +9,7 @@
 
 // App version - automatically injected from app/version.py
 const APP_VERSION = '{{VERSION}}';
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 const STATIC_CACHE = `invoforge-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `invoforge-dynamic-${CACHE_VERSION}`;
 const API_CACHE = `invoforge-api-${CACHE_VERSION}`;

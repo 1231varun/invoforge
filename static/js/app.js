@@ -5,7 +5,7 @@ class InvoiceApp {
         this.activeTab = this.appEl?.dataset.activeTab || 'dashboard';
         this.defaultRate = parseFloat(this.appEl?.dataset.defaultRate) || 0;
         this.currency = this.appEl?.dataset.currency || 'EUR';
-        this.currentVersion = this.appEl?.dataset.version || '0.1.4';
+        this.currentVersion = this.appEl?.dataset.version || '0.1.5';
 
         this.init();
     }
@@ -860,4 +860,28 @@ class InvoiceApp {
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     new InvoiceApp();
+
+    // Quit App button (standalone mode only)
+    const quitBtn = document.getElementById('quit-btn');
+    if (quitBtn) {
+        quitBtn.addEventListener('click', async () => {
+            if (confirm('Are you sure you want to quit InvoForge?')) {
+                try {
+                    await fetch('/api/quit', { method: 'POST' });
+                    // Show goodbye message
+                    document.body.innerHTML = `
+                        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif;">
+                            <div style="text-align: center;">
+                                <h1>👋 Goodbye!</h1>
+                                <p style="color: #666;">InvoForge has been shut down.</p>
+                                <p style="color: #999; font-size: 0.9em; margin-top: 1rem;">You can close this window.</p>
+                            </div>
+                        </div>
+                    `;
+                } catch (err) {
+                    console.error('Failed to quit:', err);
+                }
+            }
+        });
+    }
 });
