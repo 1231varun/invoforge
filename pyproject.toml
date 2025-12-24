@@ -1,0 +1,86 @@
+[project]
+name = "invoforge"
+version = "0.1.0"
+description = "Professional invoice generator for freelancers"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "Non-Commercial"}
+authors = [
+    {name = "Varun K Nair", email = "1231varun@gmail.com"}
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+python_classes = ["Test*"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+]
+markers = [
+    "unit: Unit tests (fast, no I/O)",
+    "integration: Integration tests (may use database)",
+]
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+omit = [
+    "app/__init__.py",
+    "app/presentation/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+]
+show_missing = true
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+    "build_app.py",  # Build script with intentional import side-effects
+]
+
+[tool.ruff.lint]
+# Standard rules - relaxed for gradual adoption
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "E741",   # ambiguous variable name (l, O, I)
+    "E722",   # bare except
+    "B008",   # do not perform function calls in argument defaults
+    "B905",   # zip without explicit strict
+    "B017",   # assert raises exception
+    "E402",   # module level import not at top of file
+    "W291",   # trailing whitespace (formatter handles)
+    "W293",   # blank line with whitespace (formatter handles)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="forgeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#forgeGradient)"/>
+  <!-- Anvil shape -->
+  <g fill="#ffffff">
+    <!-- Anvil top face -->
+    <rect x="25" y="35" width="50" height="8" rx="2"/>
+    <!-- Anvil horn (left side) -->
+    <path d="M25 35 L25 39 L15 42 L15 39 L25 35" />
+    <!-- Anvil body -->
+    <rect x="30" y="43" width="40" height="15" rx="2"/>
+    <!-- Anvil base -->
+    <rect x="22" y="58" width="56" height="10" rx="2"/>
+    <!-- Document lines on anvil -->
+    <rect x="35" y="47" width="20" height="2" rx="1" fill="#3b82f6"/>
+    <rect x="35" y="51" width="15" height="2" rx="1" fill="#3b82f6"/>
+  </g>
+</svg>

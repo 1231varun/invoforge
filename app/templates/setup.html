@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup | InvoForge</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/static/favicon/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon/favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="/static/css/styles.css?v=13">
+</head>
+<body>
+    <div class="app setup-page">
+        <div class="setup-container">
+            <div class="setup-header">
+                <img src="/static/favicon/logo.png" alt="InvoForge" class="setup-logo">
+                <h1>Welcome to InvoForge</h1>
+                <p>Let's set up your billing details. This only takes a minute.</p>
+            </div>
+            
+            <form id="setup-form" class="setup-form">
+                <div class="setup-step active" data-step="1">
+                    <h2 class="step-title">Your Business Details</h2>
+                    
+                    <div class="field">
+                        <label for="supplier_name">Business / Your Name *</label>
+                        <input type="text" id="supplier_name" name="supplier_name" required 
+                               placeholder="e.g., Business / Your Name">
+                    </div>
+                    
+                    <div class="field">
+                        <label for="supplier_address">Address *</label>
+                        <textarea id="supplier_address" name="supplier_address" rows="3" required
+                                  placeholder="Street, City, PIN"></textarea>
+                    </div>
+                    
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="gstin">GSTIN</label>
+                            <input type="text" id="gstin" name="gstin" placeholder="12XXXXX3456A7B8">
+                        </div>
+                        <div class="field">
+                            <label for="pan">PAN</label>
+                            <input type="text" id="pan" name="pan" placeholder="XXXXX1234A">
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label for="supplier_email">Your Email *</label>
+                        <input type="email" id="supplier_email" name="supplier_email" required
+                               placeholder="you@example.com">
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">
+                            Continue →
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="setup-step" data-step="2">
+                    <h2 class="step-title">Client Details</h2>
+                    
+                    <div class="field">
+                        <label for="client_name">Client Company Name *</label>
+                        <input type="text" id="client_name" name="client_name" required
+                               placeholder="e.g., Acme Corp GmbH">
+                    </div>
+                    
+                    <div class="field">
+                        <label for="client_address">Client Address *</label>
+                        <input type="text" id="client_address" name="client_address" required
+                               placeholder="Street, City, Country">
+                    </div>
+                    
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="client_country">Country *</label>
+                            <input type="text" id="client_country" name="client_country" required
+                                   placeholder="e.g., Germany / France / Spain / Italy / etc.">
+                        </div>
+                        <div class="field">
+                            <label for="client_email">Client Email</label>
+                            <input type="email" id="client_email" name="client_email"
+                                   placeholder="client@company.com">
+                        </div>
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                            ← Back
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">
+                            Continue →
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="setup-step" data-step="3">
+                    <h2 class="step-title">Export & Bank Details</h2>
+                    
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="place_of_supply">Place of Supply *</label>
+                            <input type="text" id="place_of_supply" name="place_of_supply" required
+                                   placeholder="e.g., Germany">
+                        </div>
+                        <div class="field">
+                            <label for="lut_no">LUT Number</label>
+                            <input type="text" id="lut_no" name="lut_no" placeholder="e.g., ABC1XXXXXXXXXX">
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label for="lut_validity">LUT Validity Year</label>
+                        <select id="lut_validity" name="lut_validity">
+                            <option value="2024-25">FY 2024-25</option>
+                            <option value="2025-26" selected>FY 2025-26</option>
+                            <option value="2026-27">FY 2026-27</option>
+                            <option value="2027-28">FY 2027-28</option>
+                        </select>
+                    </div>
+                    
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="bank_name">Bank Name *</label>
+                            <input type="text" id="bank_name" name="bank_name" required
+                                   placeholder="e.g., HDFC Bank">
+                        </div>
+                        <div class="field">
+                            <label for="account_no">Account Number *</label>
+                            <input type="text" id="account_no" name="account_no" required
+                                   placeholder="e.g., XXXXXXXXXXXX">
+                        </div>
+                    </div>
+                    
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="account_holder">Account Holder *</label>
+                            <input type="text" id="account_holder" name="account_holder" required
+                                   placeholder="Your Name or Business">
+                        </div>
+                        <div class="field">
+                            <label for="swift_code">SWIFT Code *</label>
+                            <input type="text" id="swift_code" name="swift_code" required
+                                   placeholder="e.g., HDFCINBBXXX">
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label for="signatory_name">Signatory Name (for invoice signature)</label>
+                        <input type="text" id="signatory_name" name="signatory_name"
+                               placeholder="Full name that appears on invoice signature">
+                        <small class="field-hint">Leave blank to use business name</small>
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                            ← Back
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">
+                            Continue →
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="setup-step" data-step="4">
+                    <h2 class="step-title">Billing Defaults</h2>
+                    
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="daily_rate">Daily Rate *</label>
+                            <input type="number" id="daily_rate" name="daily_rate" step="0.01" required
+                                   placeholder="e.g., 309.73">
+                        </div>
+                        <div class="field">
+                            <label for="currency">Currency</label>
+                            <select id="currency" name="currency">
+                                <option value="EUR" selected>EUR (€)</option>
+                                <option value="USD">USD ($)</option>
+                                <option value="GBP">GBP (£)</option>
+                                <option value="INR">INR (₹)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label for="service_description">Service Description</label>
+                        <input type="text" id="service_description" name="service_description"
+                               value="Professional / IT / Consulting Services (SAC: 9983)">
+                    </div>
+                    
+                    <div class="setup-summary">
+                        <h3><i data-lucide="check-circle"></i> You're all set!</h3>
+                        <p>You can always update these settings later from the Settings page.</p>
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                            ← Back
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-large">
+                            Complete Setup
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="setup-progress">
+                <div class="progress-step active" data-step="1">1</div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="2">2</div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="3">3</div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="4">4</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+        
+        function showStep(step) {
+            document.querySelectorAll('.setup-step').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`.setup-step[data-step="${step}"]`).classList.add('active');
+            
+            document.querySelectorAll('.progress-step').forEach(el => {
+                const s = parseInt(el.dataset.step);
+                el.classList.toggle('active', s <= step);
+                el.classList.toggle('completed', s < step);
+            });
+        }
+        
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+        
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+        
+        document.getElementById('setup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const form = e.target;
+            const data = {};
+            
+            new FormData(form).forEach((value, key) => {
+                data[key] = value;
+            });
+            
+            data.setup_complete = true;
+            
+            try {
+                const response = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    window.location.href = '/';
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Failed to save settings.');
+            }
+        });
+        
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
+

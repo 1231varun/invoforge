@@ -1,0 +1,16 @@
+# Development dependencies
+# Install with: pip install -r requirements-dev.txt
+
+# Include base requirements
+-r requirements.txt
+
+# Testing
+pytest==8.3.4
+pytest-cov==6.0.0
+
+# Linting
+ruff==0.8.4
+
+# Pre-commit hooks
+pre-commit==4.0.1
+

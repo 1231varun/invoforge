@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvoForge - Professional Invoice Generator</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="InvoForge - Professional invoice generator for freelancers">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="InvoForge">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/static/favicon/site.webmanifest">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/static/favicon/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon/favicon.svg">
+    <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons (MIT License) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <link rel="stylesheet" href="/static/css/styles.css?v=14">
+    {% if active_tab == 'leaves' %}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    {% endif %}
+</head>
+<body>
+    <!-- Update Notification Banner -->
+    <div id="update-banner" class="update-banner hidden">
+        <div class="update-content">
+            <i data-lucide="download"></i>
+            <span>A new version of InvoForge is available!</span>
+        </div>
+        <button type="button" id="update-btn" class="update-btn">Update Now</button>
+        <button type="button" id="update-dismiss" class="update-dismiss" title="Dismiss">
+            <i data-lucide="x"></i>
+        </button>
+    </div>
+
+    <div class="app" 
+         data-default-rate="{{ defaults.daily_rate }}" 
+         data-currency="{{ defaults.currency }}" 
+         data-active-tab="{{ active_tab }}"
+         data-version="{{ version }}">
+        <header class="header">
+            <a href="/" class="logo">
+                <span class="logo-text"><span class="logo-invo">Invo</span><span class="logo-forge">Forge</span></span>
+            </a>
+            <nav class="tabs">
+                <a href="/" class="tab {{ 'active' if active_tab == 'dashboard' else '' }}">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/invoice" class="tab {{ 'active' if active_tab == 'invoice' else '' }}">
+                    <i data-lucide="file-plus"></i>
+                    <span>New Invoice</span>
+                </a>
+                <a href="/leaves" class="tab {{ 'active' if active_tab == 'leaves' else '' }}">
+                    <i data-lucide="calendar-off"></i>
+                    <span>Leaves</span>
+                </a>
+                <a href="/history" class="tab {{ 'active' if active_tab == 'history' else '' }}">
+                    <i data-lucide="history"></i>
+                    <span>History</span>
+                </a>
+                <a href="/settings" class="tab {{ 'active' if active_tab == 'settings' else '' }}">
+                    <i data-lucide="settings"></i>
+                </a>
+                <div class="github-btn-wrapper">
+                    <iframe src="https://ghbtns.com/github-btn.html?user=1231varun&repo=invoforge&type=star&count=true&size=large" 
+                            frameborder="0" 
+                            scrolling="0" 
+                            width="130" 
+                            height="30" 
+                            title="GitHub Stars">
+                    </iframe>
+                </div>
+                <button type="button" class="theme-toggle" id="theme-toggle" title="Toggle theme">
+                    <i data-lucide="sun" class="theme-icon-light"></i>
+                    <i data-lucide="moon" class="theme-icon-dark"></i>
+                </button>
+            </nav>
+        </header>
+
+        <main class="main">
+            {% if active_tab == 'dashboard' %}
+            <!-- Dashboard -->
+            <div class="dashboard-page">
+                <div class="dashboard-welcome">
+                    <h1>Welcome back!</h1>
+                    <p id="dashboard-time" class="dashboard-time"></p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-icon"><i data-lucide="file-text"></i></span>
+                        <div class="stat-content">
+                            <span class="stat-value" id="stat-invoices">—</span>
+                            <span class="stat-label">Invoices Generated</span>
+                        </div>
+                    </div>
+                    <div class="stat-card highlight">
+                        <span class="stat-icon"><i data-lucide="wallet"></i></span>
+                        <div class="stat-content">
+                            <span class="stat-value" id="stat-earned">—</span>
+                            <span class="stat-label">Total Earned</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon"><i data-lucide="calendar-off"></i></span>
+                        <div class="stat-content">
+                            <span class="stat-value" id="stat-leaves">—</span>
+                            <span class="stat-label">Leaves This Year</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>This Month</h3>
+                        <div class="month-stats">
+                            <div class="month-stat">
+                                <span class="month-stat-value" id="month-name">—</span>
+                            </div>
+                            <div class="month-details">
+                                <div class="month-detail">
+                                    <span class="detail-label">Working Days</span>
+                                    <span class="detail-value" id="month-weekdays">—</span>
+                                </div>
+                                <div class="month-detail">
+                                    <span class="detail-label">Leaves</span>
+                                    <span class="detail-value" id="month-leaves">—</span>
+                                </div>
+                                <div class="month-detail highlight">
+                                    <span class="detail-label">Billable Days</span>
+                                    <span class="detail-value" id="month-billable">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card action-card">
+                        <h3>Quick Actions</h3>
+                        <div class="quick-actions">
+                            <a href="/invoice" class="quick-action-btn primary">
+                                <span class="action-icon"><i data-lucide="file-plus"></i></span>
+                                <span>Create Invoice #<span id="next-invoice-num">—</span></span>
+                            </a>
+                            <a href="/leaves" class="quick-action-btn">
+                                <span class="action-icon"><i data-lucide="calendar"></i></span>
+                                <span>Manage Leaves</span>
+                            </a>
+                            <a href="/history" class="quick-action-btn">
+                                <span class="action-icon"><i data-lucide="archive"></i></span>
+                                <span>View History</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {% elif active_tab == 'invoice' %}
+            <!-- Invoice Form -->
+            <form id="invoice-form" class="form">
+                <div class="form-grid">
+                    <section class="form-section">
+                        <h2 class="section-title">Invoice Details</h2>
+                        
+                        <div class="field">
+                            <label for="invoice_number">Invoice Number</label>
+                            <input type="number" id="invoice_number" name="invoice_number" min="1" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="invoice_date">Invoice Date</label>
+                            <input type="date" id="invoice_date" name="invoice_date" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="validity_year">LUT Validity Year</label>
+                            <select id="validity_year" name="validity_year" required>
+                                <option value="2024-25">FY 2024-25</option>
+                                <option value="2025-26" selected>FY 2025-26</option>
+                                <option value="2026-27">FY 2026-27</option>
+                                <option value="2027-28">FY 2027-28</option>
+                                <option value="2028-29">FY 2028-29</option>
+                            </select>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <h2 class="section-title">Working Days</h2>
+
+                        <div class="field">
+                            <label for="total_working_days">Total Working Days (auto-calculated)</label>
+                            <input type="number" id="total_working_days" name="total_working_days" min="1" max="31" required>
+                            <span class="field-hint" id="working-days-hint"></span>
+                        </div>
+
+                        <div class="field">
+                            <label for="leaves_taken">Leaves Taken</label>
+                            <input type="number" id="leaves_taken" name="leaves_taken" min="0" max="31" value="0" readonly>
+                        </div>
+
+                        <div id="leave-dates-container" class="leave-dates hidden">
+                            <label>Leave Dates</label>
+                            <div id="leave-dates-list"></div>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <h2 class="section-title">Billing</h2>
+
+                        <div class="field">
+                        <label for="rate">Daily Rate ({{ defaults.currency }})</label>
+                        <input type="number" id="rate" name="rate" step="0.01" min="0" value="{{ defaults.daily_rate }}">
+                        </div>
+                        
+                        <div class="current-time">
+                            <span class="time-label">Local Time:</span>
+                            <span id="current-time" class="time-value">--:--</span>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="preview-section" id="preview-section">
+                    <h2 class="section-title">Invoice Summary</h2>
+                    <div id="preview-summary" class="preview-grid">
+                        <div class="preview-item">
+                            <span class="preview-label">Service Period</span>
+                            <span class="preview-value" id="preview-period">—</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Days Worked</span>
+                            <span class="preview-value" id="preview-days">—</span>
+                        </div>
+                        <div class="preview-item highlight">
+                            <span class="preview-label">Total Amount</span>
+                            <span class="preview-value" id="preview-amount">—</span>
+                        </div>
+                        <div class="preview-item full-width">
+                            <span class="preview-label">Amount in Words</span>
+                            <span class="preview-value words" id="preview-words">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="format-selector">
+                    <label class="format-label">Output Format:</label>
+                    <div class="format-options">
+                        <label class="format-option">
+                            <input type="radio" name="output_format" value="pdf" checked>
+                            <span class="format-badge"><i data-lucide="file-type"></i> PDF</span>
+                        </label>
+                        <label class="format-option">
+                            <input type="radio" name="output_format" value="docx">
+                            <span class="format-badge"><i data-lucide="file-text"></i> DOCX</span>
+                        </label>
+                        <label class="format-option">
+                            <input type="radio" name="output_format" value="both">
+                            <span class="format-badge"><i data-lucide="files"></i> Both</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="button" class="btn btn-secondary" id="preview-btn">
+                        <i data-lucide="eye"></i> Preview Invoice
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="generate-btn">
+                        <span class="btn-text">Generate Invoice</span>
+                        <span class="btn-loader hidden"></span>
+                    </button>
+                </div>
+            </form>
+            
+            <div id="download-section" class="download-section hidden">
+                <h2 class="section-title">Downloads Ready</h2>
+                <div class="download-buttons">
+                    <a id="download-docx" class="btn btn-download" href="#" download>
+                        <i data-lucide="file-text"></i>
+                        <span>Download DOCX</span>
+                    </a>
+                    <a id="download-pdf" class="btn btn-download" href="#" download>
+                        <i data-lucide="file-type"></i>
+                        <span>Download PDF</span>
+                    </a>
+                </div>
+            </div>
+            
+            {% elif active_tab == 'leaves' %}
+            <!-- Leave Calendar -->
+            <div class="leave-calendar-page">
+                <div class="calendar-header">
+                    <h2 class="page-title">Leave Calendar</h2>
+                    <p class="page-desc">Click on any date to add or remove a leave.</p>
+                </div>
+                
+                <div id="calendar" class="calendar-container"></div>
+                
+                <div id="leave-modal" class="modal hidden">
+                    <div class="modal-content">
+                        <h3 id="modal-title">Add Leave</h3>
+                        <form id="leave-modal-form">
+                            <input type="hidden" id="modal-date">
+                            <div class="field">
+                                <label for="modal-reason">Reason (optional)</label>
+                                <input type="text" id="modal-reason" placeholder="e.g., Personal day, Sick leave">
+                            </div>
+                            <div class="modal-actions">
+                                <button type="button" class="btn btn-secondary" id="modal-cancel">Cancel</button>
+                                <button type="button" class="btn btn-danger hidden" id="modal-delete">Remove Leave</button>
+                                <button type="submit" class="btn btn-primary" id="modal-save">Save Leave</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            {% elif active_tab == 'history' %}
+            <!-- Invoice History -->
+            <div class="history-page">
+                <div class="history-header">
+                    <h2 class="page-title">Invoice History</h2>
+                    <p class="page-desc">View and download previously generated invoices.</p>
+                </div>
+                
+                <div id="invoices-list" class="invoices-list">
+                    <p class="empty-state">Loading...</p>
+                </div>
+            </div>
+            
+            {% elif active_tab == 'settings' %}
+            <!-- Settings -->
+            <div class="settings-page">
+                <div class="settings-header">
+                    <h2 class="page-title">Settings</h2>
+                    <p class="page-desc">Update your business and billing details.</p>
+                </div>
+                
+                <form id="settings-form" class="settings-form">
+                    <div class="settings-grid">
+                        <section class="settings-section">
+                            <h3 class="section-title">Your Business</h3>
+                            
+                            <div class="field">
+                                <label for="set_supplier_name">Business Name</label>
+                                <input type="text" id="set_supplier_name" name="supplier_name">
+                            </div>
+                            <div class="field">
+                                <label for="set_supplier_address">Address</label>
+                                <textarea id="set_supplier_address" name="supplier_address" rows="2"></textarea>
+                            </div>
+                            <div class="field-row">
+                                <div class="field">
+                                    <label for="set_gstin">GSTIN</label>
+                                    <input type="text" id="set_gstin" name="gstin">
+                                </div>
+                                <div class="field">
+                                    <label for="set_pan">PAN</label>
+                                    <input type="text" id="set_pan" name="pan">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="set_supplier_email">Email</label>
+                                <input type="email" id="set_supplier_email" name="supplier_email">
+                            </div>
+                        </section>
+                        
+                        <section class="settings-section">
+                            <h3 class="section-title">Client</h3>
+                            
+                            <div class="field">
+                                <label for="set_client_name">Client Name</label>
+                                <input type="text" id="set_client_name" name="client_name">
+                            </div>
+                            <div class="field">
+                                <label for="set_client_address">Client Address</label>
+                                <input type="text" id="set_client_address" name="client_address">
+                            </div>
+                            <div class="field-row">
+                                <div class="field">
+                                    <label for="set_client_country">Country</label>
+                                    <input type="text" id="set_client_country" name="client_country">
+                                </div>
+                                <div class="field">
+                                    <label for="set_client_email">Email</label>
+                                    <input type="email" id="set_client_email" name="client_email">
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <section class="settings-section">
+                            <h3 class="section-title">Export Details</h3>
+                            
+                            <div class="field-row">
+                                <div class="field">
+                                    <label for="set_place_of_supply">Place of Supply</label>
+                                    <input type="text" id="set_place_of_supply" name="place_of_supply">
+                                </div>
+                                <div class="field">
+                                    <label for="set_lut_no">LUT Number</label>
+                                    <input type="text" id="set_lut_no" name="lut_no">
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <section class="settings-section">
+                            <h3 class="section-title">Bank Details</h3>
+                            
+                            <div class="field-row">
+                                <div class="field">
+                                    <label for="set_bank_name">Bank Name</label>
+                                    <input type="text" id="set_bank_name" name="bank_name">
+                                </div>
+                                <div class="field">
+                                    <label for="set_account_no">Account Number</label>
+                                    <input type="text" id="set_account_no" name="account_no">
+                                </div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field">
+                                    <label for="set_account_holder">Account Holder</label>
+                                    <input type="text" id="set_account_holder" name="account_holder">
+                                </div>
+                                <div class="field">
+                                    <label for="set_swift_code">SWIFT Code</label>
+                                    <input type="text" id="set_swift_code" name="swift_code">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="set_signatory_name">Signatory Name</label>
+                                <input type="text" id="set_signatory_name" name="signatory_name" placeholder="Name for invoice signature">
+                            </div>
+                        </section>
+                        
+                        <section class="settings-section">
+                            <h3 class="section-title">Billing Defaults</h3>
+                            
+                            <div class="field-row">
+                                <div class="field">
+                                    <label for="set_daily_rate">Daily Rate</label>
+                                    <input type="number" id="set_daily_rate" name="daily_rate" step="0.01">
+                                </div>
+                                <div class="field">
+                                    <label for="set_currency">Currency</label>
+                                    <select id="set_currency" name="currency">
+                                        <option value="EUR">EUR</option>
+                                        <option value="USD">USD</option>
+                                        <option value="GBP">GBP</option>
+                                        <option value="INR">INR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="set_service_description">Service Description</label>
+                                <input type="text" id="set_service_description" name="service_description">
+                            </div>
+                        </section>
+                    </div>
+                    
+                    <div class="settings-actions">
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+            
+            <!-- Document Preview Modal (Global) -->
+            <div id="document-preview-modal" class="preview-modal hidden">
+                <div class="preview-modal-backdrop"></div>
+                <div class="preview-modal-container">
+                    <div class="preview-modal-header">
+                        <h3>Invoice Preview</h3>
+                        <div class="preview-modal-actions">
+                            <button type="button" class="preview-action-btn" id="preview-print-btn" title="Print">
+                                <i data-lucide="printer"></i>
+                            </button>
+                            <button type="button" class="preview-action-btn close" id="preview-close-btn" title="Close">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="preview-modal-body">
+                        <div class="paper-container">
+                            <div class="paper" id="document-preview-content">
+                                <p class="preview-placeholder">Loading preview...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>InvoForge v{{ version }} © {{ year }}</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js?v=4"></script>
+    
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+        
+        // Re-initialize icons after any DOM changes
+        window.reinitIcons = () => lucide.createIcons();
+    </script>
+    
+    <!-- Theme Toggle -->
+    <script>
+        (function() {
+            const toggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+            
+            // Load saved theme or default to light
+            const savedTheme = localStorage.getItem('invoforge-theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            
+            toggle.addEventListener('click', () => {
+                const current = html.getAttribute('data-theme');
+                const next = current === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('invoforge-theme', next);
+            });
+        })();
+    </script>
+    
+    <!-- Service Worker Registration & Update Handler -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            let newWorkerWaiting = null;
+            
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered:', registration.scope);
+                        
+                        // Check for updates periodically (every 30 minutes)
+                        setInterval(() => {
+                            registration.update();
+                        }, 30 * 60 * 1000);
+                        
+                        // Handle update found
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version available - show banner
+                                    newWorkerWaiting = newWorker;
+                                    showUpdateBanner();
+                                }
+                            });
+                        });
+                        
+                        // If there's already a waiting worker, show banner
+                        if (registration.waiting) {
+                            newWorkerWaiting = registration.waiting;
+                            showUpdateBanner();
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('SW registration failed:', error);
+                    });
+                
+                // Listen for SW update messages
+                navigator.serviceWorker.addEventListener('message', (event) => {
+                    if (event.data && event.data.type === 'SW_UPDATED') {
+                        console.log('SW updated to version:', event.data.version);
+                    }
+                });
+                
+                // Handle controller change (new SW took over)
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    window.location.reload();
+                });
+            });
+            
+            function showUpdateBanner() {
+                const banner = document.getElementById('update-banner');
+                if (banner) {
+                    banner.classList.remove('hidden');
+                    // Re-init lucide icons for the banner
+                    if (window.lucide) lucide.createIcons();
+                }
+            }
+            
+            function hideUpdateBanner() {
+                const banner = document.getElementById('update-banner');
+                if (banner) {
+                    banner.classList.add('hidden');
+                }
+            }
+            
+            // Update button click
+            document.getElementById('update-btn')?.addEventListener('click', () => {
+                if (newWorkerWaiting) {
+                    newWorkerWaiting.postMessage({ type: 'SKIP_WAITING' });
+                }
+            });
+            
+            // Dismiss button click
+            document.getElementById('update-dismiss')?.addEventListener('click', () => {
+                hideUpdateBanner();
+            });
+            });
+        }
+    </script>
+</body>
+</html>
