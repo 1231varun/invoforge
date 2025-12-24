@@ -7,8 +7,8 @@
  * - Pages: Stale-while-revalidate
  */
 
-// App version - update this when releasing new versions
-const APP_VERSION = '0.1.0';
+// App version - automatically injected from app/version.py
+const APP_VERSION = '{{VERSION}}';
 const CACHE_VERSION = 'v1';
 const STATIC_CACHE = `invoforge-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `invoforge-dynamic-${CACHE_VERSION}`;

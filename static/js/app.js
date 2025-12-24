@@ -5,7 +5,7 @@ class InvoiceApp {
         this.activeTab = this.appEl?.dataset.activeTab || 'dashboard';
         this.defaultRate = parseFloat(this.appEl?.dataset.defaultRate) || 0;
         this.currency = this.appEl?.dataset.currency || 'EUR';
-        this.currentVersion = this.appEl?.dataset.version || '0.1.0';
+        this.currentVersion = this.appEl?.dataset.version || '0.1.1';
         
         this.init();
     }

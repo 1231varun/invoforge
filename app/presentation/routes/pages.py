@@ -30,8 +30,17 @@ STATIC_DIR = Path(__file__).parent.parent.parent.parent / "static"
 
 @pages_bp.route("/sw.js")
 def service_worker():
-    """Serve service worker from root (required for PWA scope)"""
-    return send_from_directory(STATIC_DIR, "sw.js", mimetype="application/javascript")
+    """Serve service worker from root with dynamic version injection"""
+    from flask import Response
+
+    sw_path = STATIC_DIR / "sw.js"
+    with open(sw_path, "r") as f:
+        content = f.read()
+
+    # Inject version from single source of truth
+    content = content.replace("{{VERSION}}", __version__)
+
+    return Response(content, mimetype="application/javascript")
 
 
 @pages_bp.route("/")
