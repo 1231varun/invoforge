@@ -4,31 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InvoForge - Professional Invoice Generator</title>
-    
+
     <!-- PWA Meta Tags -->
     <meta name="description" content="InvoForge - Professional invoice generator for freelancers">
     <meta name="theme-color" content="#2563eb">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="InvoForge">
-    
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="/static/favicon/site.webmanifest">
-    
+
     <!-- Favicon -->
     <link rel="icon" href="/static/favicon/favicon.ico" sizes="48x48">
     <link rel="icon" type="image/svg+xml" href="/static/favicon/favicon.svg">
     <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon/favicon-96x96.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+
     <!-- Lucide Icons (MIT License) -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    
+
     <link rel="stylesheet" href="/static/css/styles.css?v=16">
     {% if active_tab == 'leaves' %}
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
@@ -47,9 +47,9 @@
         </button>
     </div>
 
-    <div class="app" 
-         data-default-rate="{{ defaults.daily_rate }}" 
-         data-currency="{{ defaults.currency }}" 
+    <div class="app"
+         data-default-rate="{{ defaults.daily_rate }}"
+         data-currency="{{ defaults.currency }}"
          data-active-tab="{{ active_tab }}"
          data-version="{{ version }}">
         <header class="header">
@@ -77,11 +77,11 @@
                     <i data-lucide="settings"></i>
                 </a>
                 <div class="github-btn-wrapper">
-                    <iframe src="https://ghbtns.com/github-btn.html?user=1231varun&repo=invoforge&type=star&count=true&size=large" 
-                            frameborder="0" 
-                            scrolling="0" 
-                            width="130" 
-                            height="30" 
+                    <iframe src="https://ghbtns.com/github-btn.html?user=1231varun&repo=invoforge&type=star&count=true&size=large"
+                            frameborder="0"
+                            scrolling="0"
+                            width="130"
+                            height="30"
                             title="GitHub Stars">
                     </iframe>
                 </div>
@@ -100,7 +100,7 @@
                     <h1>Welcome back!</h1>
                     <p id="dashboard-time" class="dashboard-time"></p>
                 </div>
-                
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <span class="stat-icon"><i data-lucide="file-text"></i></span>
@@ -124,7 +124,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="dashboard-grid">
                     <div class="dashboard-card">
                         <h3>This Month</h3>
@@ -148,7 +148,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="dashboard-card action-card">
                         <h3>Quick Actions</h3>
                         <div class="quick-actions">
@@ -168,14 +168,14 @@
                     </div>
                 </div>
             </div>
-            
+
             {% elif active_tab == 'invoice' %}
             <!-- Invoice Form -->
             <form id="invoice-form" class="form">
                 <div class="form-grid">
                     <section class="form-section">
                         <h2 class="section-title">Invoice Details</h2>
-                        
+
                         <div class="field">
                             <label for="invoice_number">Invoice Number</label>
                             <input type="number" id="invoice_number" name="invoice_number" min="1" required>
@@ -236,7 +236,7 @@
                         <label for="rate">Daily Rate ({{ defaults.currency }})</label>
                         <input type="number" id="rate" name="rate" step="0.01" min="0" value="{{ defaults.daily_rate }}">
                         </div>
-                        
+
                         <div class="current-time">
                             <span class="time-label">Local Time:</span>
                             <span id="current-time" class="time-value">--:--</span>
@@ -294,7 +294,7 @@
                     </button>
                 </div>
             </form>
-            
+
             <div id="download-section" class="download-section hidden">
                 <h2 class="section-title">Downloads Ready</h2>
                 <div class="download-buttons">
@@ -308,7 +308,7 @@
                     </a>
                 </div>
             </div>
-            
+
             {% elif active_tab == 'leaves' %}
             <!-- Leave Calendar -->
             <div class="leave-calendar-page">
@@ -316,9 +316,9 @@
                     <h2 class="page-title">Leave Calendar</h2>
                     <p class="page-desc">Click on any date to add or remove a leave.</p>
                 </div>
-                
+
                 <div id="calendar" class="calendar-container"></div>
-                
+
                 <div id="leave-modal" class="modal hidden">
                     <div class="modal-content">
                         <h3 id="modal-title">Add Leave</h3>
@@ -337,7 +337,7 @@
                     </div>
                 </div>
             </div>
-            
+
             {% elif active_tab == 'history' %}
             <!-- Invoice History -->
             <div class="history-page">
@@ -345,12 +345,12 @@
                     <h2 class="page-title">Invoice History</h2>
                     <p class="page-desc">View and download previously generated invoices.</p>
                 </div>
-                
+
                 <div id="invoices-list" class="invoices-list">
                     <p class="empty-state">Loading...</p>
                 </div>
             </div>
-            
+
             {% elif active_tab == 'settings' %}
             <!-- Settings -->
             <div class="settings-page">
@@ -358,12 +358,12 @@
                     <h2 class="page-title">Settings</h2>
                     <p class="page-desc">Update your business and billing details.</p>
                 </div>
-                
+
                 <form id="settings-form" class="settings-form">
                     <div class="settings-grid">
                         <section class="settings-section">
                             <h3 class="section-title">Your Business</h3>
-                            
+
                             <div class="field">
                                 <label for="set_supplier_name">Business Name</label>
                                 <input type="text" id="set_supplier_name" name="supplier_name">
@@ -387,10 +387,10 @@
                                 <input type="email" id="set_supplier_email" name="supplier_email">
                             </div>
                         </section>
-                        
+
                         <section class="settings-section">
                             <h3 class="section-title">Client</h3>
-                            
+
                             <div class="field">
                                 <label for="set_client_name">Client Name</label>
                                 <input type="text" id="set_client_name" name="client_name">
@@ -410,10 +410,10 @@
                                 </div>
                             </div>
                         </section>
-                        
+
                         <section class="settings-section">
                             <h3 class="section-title">Export Details</h3>
-                            
+
                             <div class="field-row">
                                 <div class="field">
                                     <label for="set_place_of_supply">Place of Supply</label>
@@ -425,10 +425,10 @@
                                 </div>
                             </div>
                         </section>
-                        
+
                         <section class="settings-section">
                             <h3 class="section-title">Bank Details</h3>
-                            
+
                             <div class="field-row">
                                 <div class="field">
                                     <label for="set_bank_name">Bank Name</label>
@@ -454,10 +454,10 @@
                                 <input type="text" id="set_signatory_name" name="signatory_name" placeholder="Name for invoice signature">
                             </div>
                         </section>
-                        
+
                         <section class="settings-section">
                             <h3 class="section-title">Billing Defaults</h3>
-                            
+
                             <div class="field-row">
                                 <div class="field">
                                     <label for="set_daily_rate">Daily Rate</label>
@@ -479,14 +479,14 @@
                             </div>
                         </section>
                     </div>
-                    
+
                     <div class="settings-actions">
                         <button type="submit" class="btn btn-primary">Save Settings</button>
                     </div>
                 </form>
             </div>
             {% endif %}
-            
+
             <!-- Document Preview Modal (Global) -->
             <div id="document-preview-modal" class="preview-modal hidden">
                 <div class="preview-modal-backdrop"></div>
@@ -519,25 +519,25 @@
     </div>
 
     <script src="/static/js/app.js?v=5"></script>
-    
+
     <!-- Initialize Lucide Icons -->
     <script>
         lucide.createIcons();
-        
+
         // Re-initialize icons after any DOM changes
         window.reinitIcons = () => lucide.createIcons();
     </script>
-    
+
     <!-- Theme Toggle -->
     <script>
         (function() {
             const toggle = document.getElementById('theme-toggle');
             const html = document.documentElement;
-            
+
             // Load saved theme or default to light
             const savedTheme = localStorage.getItem('invoforge-theme') || 'light';
             html.setAttribute('data-theme', savedTheme);
-            
+
             toggle.addEventListener('click', () => {
                 const current = html.getAttribute('data-theme');
                 const next = current === 'light' ? 'dark' : 'light';
@@ -546,22 +546,22 @@
             });
         })();
     </script>
-    
+
     <!-- Service Worker Registration & Update Handler -->
     <script>
         if ('serviceWorker' in navigator) {
             let newWorkerWaiting = null;
-            
+
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then((registration) => {
                         console.log('SW registered:', registration.scope);
-                        
+
                         // Check for updates periodically (every 30 minutes)
                         setInterval(() => {
                             registration.update();
                         }, 30 * 60 * 1000);
-                        
+
                         // Handle update found
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
@@ -573,7 +573,7 @@
                                 }
                             });
                         });
-                        
+
                         // If there's already a waiting worker, show banner
                         if (registration.waiting) {
                             newWorkerWaiting = registration.waiting;
@@ -583,20 +583,20 @@
                     .catch((error) => {
                         console.log('SW registration failed:', error);
                     });
-                
+
                 // Listen for SW update messages
                 navigator.serviceWorker.addEventListener('message', (event) => {
                     if (event.data && event.data.type === 'SW_UPDATED') {
                         console.log('SW updated to version:', event.data.version);
                     }
                 });
-                
+
                 // Handle controller change (new SW took over)
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
                     window.location.reload();
                 });
             });
-            
+
             function showUpdateBanner() {
                 const banner = document.getElementById('update-banner');
                 if (banner) {
@@ -605,21 +605,21 @@
                     if (window.lucide) lucide.createIcons();
                 }
             }
-            
+
             function hideUpdateBanner() {
                 const banner = document.getElementById('update-banner');
                 if (banner) {
                     banner.classList.add('hidden');
                 }
             }
-            
+
             // Update button click
             document.getElementById('update-btn')?.addEventListener('click', () => {
                 if (newWorkerWaiting) {
                     newWorkerWaiting.postMessage({ type: 'SKIP_WAITING' });
                 }
             });
-            
+
             // Dismiss button click
             document.getElementById('update-dismiss')?.addEventListener('click', () => {
                 hideUpdateBanner();

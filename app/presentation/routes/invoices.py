@@ -8,11 +8,9 @@ from flask import Blueprint, jsonify, request, send_file
 from app.application.use_cases.generate_invoice import GenerateInvoiceRequest
 from app.application.use_cases.preview_invoice import PreviewInvoiceRequest
 from app.container import get_container
+from app.infrastructure.documents.docx_generator import get_output_dir
 
 invoices_bp = Blueprint("invoices", __name__)
-
-PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
-OUTPUT_DIR = PROJECT_ROOT / "output"
 
 
 @invoices_bp.route("/generate", methods=["POST"])
@@ -236,7 +234,7 @@ def preview_stored_invoice(invoice_id: int):
 @invoices_bp.route("/download/<filename>")
 def download(filename: str):
     """Download a generated file"""
-    filepath = OUTPUT_DIR / filename
+    filepath = get_output_dir() / filename
 
     if not filepath.exists():
         return jsonify({"error": f"File not found: {filename}"}), 404

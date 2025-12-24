@@ -33,4 +33,3 @@ If applicable, add mockups, screenshots, or examples from other apps.
 
 ## 📝 Additional Context
 Add any other context about the feature request here.
-

@@ -53,7 +53,7 @@ class SQLiteLeaveRepository(LeaveRepository):
         with self._db.connection() as conn:
             rows = conn.execute(
                 """
-                SELECT id, leave_date, reason FROM leaves 
+                SELECT id, leave_date, reason FROM leaves
                 WHERE leave_date >= ? AND leave_date < ?
                 ORDER BY leave_date
                 """,
@@ -66,7 +66,7 @@ class SQLiteLeaveRepository(LeaveRepository):
         with self._db.connection() as conn:
             rows = conn.execute(
                 """
-                SELECT id, leave_date, reason FROM leaves 
+                SELECT id, leave_date, reason FROM leaves
                 WHERE leave_date >= ? AND leave_date <= ?
                 ORDER BY leave_date
                 """,
@@ -80,7 +80,7 @@ class SQLiteLeaveRepository(LeaveRepository):
             if year:
                 rows = conn.execute(
                     """
-                    SELECT id, leave_date, reason FROM leaves 
+                    SELECT id, leave_date, reason FROM leaves
                     WHERE leave_date >= ? AND leave_date < ?
                     ORDER BY leave_date DESC
                     """,

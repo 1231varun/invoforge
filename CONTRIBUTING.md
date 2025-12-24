@@ -54,21 +54,33 @@ cd invoforge
 python3 -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Install dependencies
-pip install -r requirements.txt
+# Install ALL dev dependencies + pre-commit hooks (REQUIRED)
+make install-dev
+
+# Or manually:
+# pip install -r requirements-dev.txt && pre-commit install
 
 # Run the app
-python run.py
+make run
 ```
 
 Open http://127.0.0.1:5665 in your browser.
 
-### Key Commands
+> ⚠️ **Important**: Always run `make install-dev` after cloning. This installs pre-commit hooks that ensure code quality before every commit.
+
+### Makefile Commands
 
 | Command | Description |
 |---------|-------------|
-| `python run.py` | Run development server on port 5665 |
-| `python build_app.py` | Build standalone executable |
+| `make install-dev` | Install dev dependencies + pre-commit hooks |
+| `make run` | Run development server (port 5665) |
+| `make test` | Run all tests |
+| `make test-cov` | Run tests with coverage report |
+| `make lint` | Run Ruff linter |
+| `make format` | Format code with Ruff |
+| `make check` | Run all checks (lint + format + tests) |
+| `make build` | Build standalone executable |
+| `make clean` | Clean build artifacts |
 
 ## Project Structure
 
@@ -283,10 +295,10 @@ tests/
 def test_example(self, invoice_calculator: InvoiceCalculator):
     # Arrange
     input_data = InvoiceInput(...)
-    
+
     # Act
     result = invoice_calculator.create_invoice(input_data, "EUR")
-    
+
     # Assert
     assert result.amount == 2100.00
 ```

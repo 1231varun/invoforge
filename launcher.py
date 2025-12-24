@@ -20,6 +20,32 @@ def get_resource_path(relative_path):
     return Path(__file__).parent / relative_path
 
 
+def get_user_data_dir() -> Path:
+    """
+    Get the user data directory for storing app data.
+
+    Uses platform-appropriate locations:
+    - Windows: %LOCALAPPDATA%/InvoForge
+    - macOS: ~/.invoforge
+    - Linux: ~/.invoforge (or XDG_DATA_HOME/invoforge)
+    """
+    if sys.platform == "win32":
+        # Windows: Use LocalAppData
+        local_app_data = os.environ.get("LOCALAPPDATA")
+        if local_app_data:
+            return Path(local_app_data) / "InvoForge"
+        return Path.home() / "AppData" / "Local" / "InvoForge"
+    elif sys.platform == "darwin":
+        # macOS: Use home directory (simpler for users)
+        return Path.home() / ".invoforge"
+    else:
+        # Linux/Unix: Use XDG_DATA_HOME or fallback
+        xdg_data = os.environ.get("XDG_DATA_HOME")
+        if xdg_data:
+            return Path(xdg_data) / "invoforge"
+        return Path.home() / ".invoforge"
+
+
 def setup_paths():
     """Setup paths for PyInstaller bundle"""
     if hasattr(sys, "_MEIPASS"):
@@ -29,8 +55,8 @@ def setup_paths():
         os.environ["FLASK_STATIC_PATH"] = str(base_path / "static")
 
         env_example = base_path / ".env.example"
-        user_data = Path.home() / ".invoforge"
-        user_data.mkdir(exist_ok=True)
+        user_data = get_user_data_dir()
+        user_data.mkdir(parents=True, exist_ok=True)
 
         user_env = user_data / ".env"
         if not user_env.exists() and env_example.exists():

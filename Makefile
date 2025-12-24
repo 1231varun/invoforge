@@ -49,4 +49,3 @@ clean:  ## Clean build artifacts
 	rm -rf build/ dist/ *.egg-info/
 	rm -rf .pytest_cache/ .ruff_cache/ .coverage htmlcov/
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
-

@@ -1,5 +1,6 @@
 """SQLite Database Connection Manager"""
 
+import os
 import sqlite3
 from collections.abc import Generator
 from contextlib import contextmanager
@@ -7,6 +8,20 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "invoices.db"
+
+
+def get_db_path() -> Path:
+    """
+    Get the database path.
+
+    For standalone builds (PyInstaller), uses ~/.invoforge/ to persist data
+    across app updates. For development, uses the project's data folder.
+    """
+    # Check if running as standalone app (set by launcher.py)
+    invoforge_data = os.environ.get("INVOFORGE_DATA")
+    if invoforge_data:
+        return Path(invoforge_data) / "invoices.db"
+    return DEFAULT_DB_PATH
 
 
 class Database:
@@ -17,7 +32,7 @@ class Database:
     """
 
     def __init__(self, db_path: Path = None):
-        self.db_path = db_path or DEFAULT_DB_PATH
+        self.db_path = db_path or get_db_path()
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._init_schema()
 

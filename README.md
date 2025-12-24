@@ -47,7 +47,7 @@
 
 ---
 
-<!-- 
+<!--
 ## 📸 Screenshots
 
 <p align="center">
@@ -125,7 +125,7 @@ docker run -p 5665:5665 1231varun/invoforge
 On first launch, the setup wizard guides you through:
 
 1. **Business Details** - Your name, address, GSTIN, PAN
-2. **Client Details** - Primary client information  
+2. **Client Details** - Primary client information
 3. **Export & Bank** - LUT number, bank account, signatory name
 4. **Billing Defaults** - Daily rate, currency, service description
 
@@ -205,17 +205,16 @@ cd invoforge
 python3 -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Install dev dependencies (includes testing & linting)
-pip install -r requirements-dev.txt
-
-# Install pre-commit hooks
-pre-commit install
+# Install dev dependencies + pre-commit hooks (REQUIRED)
+make install-dev
 
 # Run in debug mode
-python run.py
+make run
 ```
 
-### Quick Commands (Makefile)
+> ⚠️ **Always run `make install-dev` after cloning.** This installs pre-commit hooks that automatically check code quality before every commit.
+
+### Makefile Commands
 
 ```bash
 make install-dev  # Install dev dependencies + pre-commit hooks

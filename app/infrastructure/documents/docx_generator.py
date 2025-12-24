@@ -1,5 +1,6 @@
 """DOCX Document Generator Implementation"""
 
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -17,6 +18,15 @@ from app.core.interfaces.document_generator import DocumentGenerator
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 
 
+def get_output_dir() -> Path:
+    """Get output directory for generated invoices."""
+    # For standalone builds, use ~/.invoforge/output/
+    invoforge_data = os.environ.get("INVOFORGE_DATA")
+    if invoforge_data:
+        return Path(invoforge_data) / "output"
+    return PROJECT_ROOT / "output"
+
+
 class DocxGenerator(DocumentGenerator):
     """
     Generates DOCX invoices using python-docx.
@@ -31,7 +41,7 @@ class DocxGenerator(DocumentGenerator):
     SECTION_SPACING = Pt(14)
 
     def __init__(self, output_dir: Path = None):
-        self._output_dir = output_dir or PROJECT_ROOT / "output"
+        self._output_dir = output_dir or get_output_dir()
         self._output_dir.mkdir(exist_ok=True)
 
     def generate(self, invoice: Invoice, settings: Settings) -> Path:

@@ -1,6 +1,6 @@
 /**
  * Service Worker for InvoForge PWA
- * 
+ *
  * Provides offline support with intelligent caching strategies:
  * - Static assets: Cache-first (CSS, JS, images)
  * - API calls: Network-first with cache fallback
@@ -9,7 +9,7 @@
 
 // App version - automatically injected from app/version.py
 const APP_VERSION = '{{VERSION}}';
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const STATIC_CACHE = `invoforge-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `invoforge-dynamic-${CACHE_VERSION}`;
 const API_CACHE = `invoforge-api-${CACHE_VERSION}`;
@@ -45,7 +45,7 @@ const CACHEABLE_API_PATTERNS = [
  */
 self.addEventListener('install', (event) => {
   console.log('[SW] Installing service worker...');
-  
+
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then((cache) => {
@@ -64,13 +64,13 @@ self.addEventListener('install', (event) => {
  */
 self.addEventListener('activate', (event) => {
   console.log('[SW] Activating service worker...');
-  
+
   event.waitUntil(
     caches.keys()
       .then((keys) => {
         return Promise.all(
           keys
-            .filter((key) => (key.startsWith('invoice-gen-') || key.startsWith('invoforge-')) && 
+            .filter((key) => (key.startsWith('invoice-gen-') || key.startsWith('invoforge-')) &&
                            !key.includes(CACHE_VERSION))
             .map((key) => {
               console.log('[SW] Removing old cache:', key);
@@ -100,7 +100,7 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'GET_VERSION') {
     event.ports[0].postMessage({ version: APP_VERSION });
   }
-  
+
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
@@ -112,17 +112,17 @@ self.addEventListener('message', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
-  
+
   // Skip non-GET requests
   if (request.method !== 'GET') {
     return;
   }
-  
+
   // Skip chrome-extension and other protocols
   if (!url.protocol.startsWith('http')) {
     return;
   }
-  
+
   // Determine caching strategy based on request type
   if (isStaticAsset(url)) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
@@ -169,7 +169,7 @@ async function cacheFirst(request, cacheName) {
   if (cached) {
     return cached;
   }
-  
+
   try {
     const response = await fetch(request);
     if (response.ok) {
@@ -189,20 +189,20 @@ async function cacheFirst(request, cacheName) {
  */
 async function networkFirstWithCache(request, cacheName) {
   const url = new URL(request.url);
-  
+
   try {
     const response = await fetch(request);
-    
+
     // Cache successful GET responses for cacheable endpoints
     if (response.ok && isCacheableApi(url)) {
       const cache = await caches.open(cacheName);
       cache.put(request, response.clone());
     }
-    
+
     return response;
   } catch (error) {
     console.log('[SW] Network failed, trying cache:', request.url);
-    
+
     const cached = await caches.match(request);
     if (cached) {
       // Add header to indicate cached response
@@ -214,15 +214,15 @@ async function networkFirstWithCache(request, cacheName) {
         headers
       });
     }
-    
+
     // Return offline-friendly error for API
     return new Response(
-      JSON.stringify({ 
-        success: false, 
+      JSON.stringify({
+        success: false,
         error: 'You are offline. Please check your connection.',
-        offline: true 
+        offline: true
       }),
-      { 
+      {
         status: 503,
         headers: { 'Content-Type': 'application/json' }
       }
@@ -237,7 +237,7 @@ async function networkFirstWithCache(request, cacheName) {
 async function staleWhileRevalidate(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cached = await cache.match(request);
-  
+
   // Fetch in background to update cache
   const fetchPromise = fetch(request)
     .then((response) => {
@@ -247,18 +247,18 @@ async function staleWhileRevalidate(request, cacheName) {
       return response;
     })
     .catch(() => null);
-  
+
   // Return cached version immediately, or wait for network
   if (cached) {
     fetchPromise; // Fire and forget
     return cached;
   }
-  
+
   const response = await fetchPromise;
   if (response) {
     return response;
   }
-  
+
   // Offline fallback
   return new Response(
     `<!DOCTYPE html>
@@ -266,12 +266,12 @@ async function staleWhileRevalidate(request, cacheName) {
     <head>
       <title>Offline - Invoice Generator</title>
       <style>
-        body { 
-          font-family: system-ui, sans-serif; 
-          display: flex; 
-          align-items: center; 
-          justify-content: center; 
-          min-height: 100vh; 
+        body {
+          font-family: system-ui, sans-serif;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
           margin: 0;
           background: #0f172a;
           color: #e2e8f0;
@@ -301,9 +301,9 @@ async function staleWhileRevalidate(request, cacheName) {
       </div>
     </body>
     </html>`,
-    { 
-      status: 503, 
-      headers: { 'Content-Type': 'text/html' } 
+    {
+      status: 503,
+      headers: { 'Content-Type': 'text/html' }
     }
   );
 }
@@ -315,11 +315,10 @@ self.addEventListener('message', (event) => {
   if (event.data === 'skipWaiting') {
     self.skipWaiting();
   }
-  
+
   if (event.data === 'clearCache') {
     caches.keys().then((keys) => {
       keys.forEach((key) => caches.delete(key));
     });
   }
 });
-

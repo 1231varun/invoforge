@@ -9,4 +9,3 @@ data/
 build/
 dist/
 *.spec
-

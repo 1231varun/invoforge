@@ -28,8 +28,8 @@ class SQLiteInvoiceRepository(InvoiceRepository):
         with self._db.connection() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO invoices 
-                (invoice_number, invoice_date, service_period_start, service_period_end, 
+                INSERT INTO invoices
+                (invoice_number, invoice_date, service_period_start, service_period_end,
                  days_worked, amount, docx_path, pdf_path)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
@@ -61,9 +61,9 @@ class SQLiteInvoiceRepository(InvoiceRepository):
         with self._db.connection() as conn:
             rows = conn.execute(
                 """
-                SELECT id, invoice_number, invoice_date, service_period_start, 
+                SELECT id, invoice_number, invoice_date, service_period_start,
                        service_period_end, days_worked, amount, docx_path, pdf_path, created_at
-                FROM invoices 
+                FROM invoices
                 ORDER BY created_at DESC
                 """
             ).fetchall()
@@ -74,7 +74,7 @@ class SQLiteInvoiceRepository(InvoiceRepository):
         with self._db.connection() as conn:
             row = conn.execute(
                 """
-                SELECT id, invoice_number, invoice_date, service_period_start, 
+                SELECT id, invoice_number, invoice_date, service_period_start,
                        service_period_end, days_worked, amount, docx_path, pdf_path, created_at
                 FROM invoices WHERE id = ?
                 """,

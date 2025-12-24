@@ -37,4 +37,3 @@ Create a 1280x640px image for GitHub social preview.
 ## Upload Location
 
 Go to: Repository → Settings → General → Social preview → Edit → Upload image
-
